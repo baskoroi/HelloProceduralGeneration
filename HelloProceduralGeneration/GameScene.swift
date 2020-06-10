@@ -12,12 +12,14 @@ import GameplayKit
 class GameScene: SKScene {
     
     let map = SKNode()
+    let player = SKSpriteNode(imageNamed: "player")
     
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
     
     override func didMove(to view: SKView) {
         setupMap()
+        setupPlayer()
     }
     
     func setupMap() {
@@ -63,6 +65,11 @@ class GameScene: SKScene {
                 }
             }
         }
+    }
+    
+    func setupPlayer() {
+        addChild(player)
+        player.setScale(2)
     }
     
     // make map to determine water, stone, or grass tiles
