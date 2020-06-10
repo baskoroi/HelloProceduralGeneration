@@ -65,11 +65,18 @@ class GameScene: SKScene {
                 }
             }
         }
+        
+        // set up the physics
+        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
     }
     
     func setupPlayer() {
         addChild(player)
         player.setScale(2)
+        
+        player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width / 2)
+        player.physicsBody?.allowsRotation = true
+        player.physicsBody?.restitution = 0.5
     }
     
     // make map to determine water, stone, or grass tiles
