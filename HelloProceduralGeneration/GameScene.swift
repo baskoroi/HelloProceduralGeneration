@@ -31,12 +31,11 @@ class GameScene: SKScene {
     )
     
     var player: SKSpriteNode?
-    var playerFacingDown: SKAction?
+    var playerFacingDown: SKAction? // for both running + standing
     var playerStandingUp: SKAction?
     var playerStandingLeft: SKAction?
     var playerStandingRight: SKAction?
     var playerRunningUp: SKAction?
-    var playerRunningDown: SKAction?
     var playerRunningLeft: SKAction?
     var playerRunningRight: SKAction?
     var cam: SKCameraNode?
@@ -212,14 +211,23 @@ class GameScene: SKScene {
         
         // only running
         playerRunningUp = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.playerRunningUpTextures, timePerFrame: 0.1)
+            SKAction.animate(with: PlayerAnimations.playerRunningUpTextures,
+                             timePerFrame: 0.1)
         )
         playerRunningLeft = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.playerRunningLeftTextures, timePerFrame: 0.1)
+            SKAction.animate(with: PlayerAnimations.playerRunningLeftTextures,
+                             timePerFrame: 0.1)
         )
         playerRunningRight = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.playerRunningRightTextures, timePerFrame: 0.1)
+            SKAction.animate(with: PlayerAnimations.playerRunningRightTextures,
+                             timePerFrame: 0.1)
         )
+        
+        // set default action to player facing down
+        if let player = player, let facingDown = playerFacingDown {
+            player.run(facingDown,
+                       withKey: PlayerAnimations.ActionKeys.standing.rawValue)
+        }
     }
     
     // MARK: - scene camera
@@ -246,9 +254,76 @@ class GameScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
-        let location = touch.location(in: self)
-        let moveToAction = SKAction.move(to: location, duration: 1)
-        player!.run(moveToAction)
+        
+        let destination = touch.location(in: self)
+        movePlayer(to: destination)
+    }
+    
+    private func movePlayer(to location: CGPoint) {
+        guard let player = player
+            , let playerRunningRight = playerRunningRight
+            , let playerRunningUp = playerRunningUp
+            , let playerRunningLeft = playerRunningLeft
+            , let playerStandingRight = playerStandingRight
+            , let playerStandingUp = playerStandingUp
+            , let playerStandingLeft = playerStandingLeft
+            , let playerFacingDown = playerFacingDown else { return }
+        
+        let movingActionKey = PlayerAnimations.ActionKeys.moving.rawValue
+        
+        // remove previously moveToAction that's still existing, if any
+        player.removeAllActions()
+        
+        let dx = location.x - player.position.x
+        let dy = location.y - player.position.y
+        
+        let angle = atan2(dy, dx)
+        let quarterRadian = CGFloat.pi / 4
+        
+        let moveDuration: TimeInterval
+        let speed = 500
+        
+        let movePlayerAction: SKAction
+        let animatePlayerAction: SKAction
+        let idleAfterMoveAction: SKAction
+        
+        // due to the visual nature of the game, only 4-way controls are allowed
+        switch angle {
+        case (-quarterRadian) ..< quarterRadian: // right
+            animatePlayerAction = playerRunningRight
+            idleAfterMoveAction = playerStandingRight
+            
+            moveDuration = TimeInterval(dx / CGFloat(speed))
+            movePlayerAction = SKAction.moveBy(x: dx, y: 0, duration: moveDuration)
+            
+        case quarterRadian ..< 3 * quarterRadian: // up
+            animatePlayerAction = playerRunningUp
+            idleAfterMoveAction = playerStandingUp
+            
+            // CGVector(dx: 0, dy: dy)
+            moveDuration = TimeInterval(dy / CGFloat(speed))
+            movePlayerAction = SKAction.moveBy(x: 0, y: dy, duration: moveDuration)
+            
+        case 3 * quarterRadian ..< CGFloat.pi, -CGFloat.pi ..< -3 * quarterRadian: // left
+            animatePlayerAction = playerRunningLeft
+            idleAfterMoveAction = playerStandingLeft
+            
+            // CGVector(dx: dx, dy: 0)
+            moveDuration = TimeInterval(-dx / CGFloat(speed))
+            movePlayerAction = SKAction.moveBy(x: dx, y: 0, duration: moveDuration)
+        default: // down
+            animatePlayerAction = playerFacingDown
+            idleAfterMoveAction = playerFacingDown
+            
+            // CGVector(dx: 0, dy: dy)
+            moveDuration = TimeInterval(-dy / CGFloat(speed))
+            movePlayerAction = SKAction.moveBy(x: 0, y: dy, duration: moveDuration)
+        }
+        
+//        let
+        let moveActionGroup = SKAction.group([movePlayerAction, animatePlayerAction])
+        let actionSequence = SKAction.sequence([moveActionGroup, idleAfterMoveAction])
+        player.run(actionSequence, withKey: movingActionKey)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {

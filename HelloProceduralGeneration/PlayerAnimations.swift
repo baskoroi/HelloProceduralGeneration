@@ -10,6 +10,11 @@ import SpriteKit
 
 struct PlayerAnimations {
     
+    enum ActionKeys: String {
+        case moving = "moving"
+        case standing = "standing"
+    }
+    
     // facing down applies for both running and standing,
     // since the gas animation below is "behind" robot's body
     static let playerFacingDownTexture: SKTexture =
