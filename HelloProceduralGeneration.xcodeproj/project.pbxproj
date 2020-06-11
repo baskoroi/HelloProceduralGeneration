@@ -16,7 +16,7 @@
 		CCEFD1EB249110EB0064CC60 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1E9249110EB0064CC60 /* Main.storyboard */; };
 		CCEFD1ED249110EC0064CC60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1EC249110EC0064CC60 /* Assets.xcassets */; };
 		CCEFD1F0249110EC0064CC60 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1EE249110EC0064CC60 /* LaunchScreen.storyboard */; };
-		CCEFD1F8249119AF0064CC60 /* MyTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1F7249119AF0064CC60 /* MyTileSet.sks */; };
+		CCEFD1F8249119AF0064CC60 /* MainTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1F7249119AF0064CC60 /* MainTileSet.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +31,7 @@
 		CCEFD1EC249110EC0064CC60 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CCEFD1EF249110EC0064CC60 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CCEFD1F1249110EC0064CC60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CCEFD1F7249119AF0064CC60 /* MyTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyTileSet.sks; sourceTree = "<group>"; };
+		CCEFD1F7249119AF0064CC60 /* MainTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainTileSet.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +76,7 @@
 				CCEFD1DF249110EB0064CC60 /* AppDelegate.swift */,
 				CCEFD1E1249110EB0064CC60 /* GameScene.sks */,
 				CCEFD1E3249110EB0064CC60 /* Actions.sks */,
-				CCEFD1F7249119AF0064CC60 /* MyTileSet.sks */,
+				CCEFD1F7249119AF0064CC60 /* MainTileSet.sks */,
 				CCEFD1E5249110EB0064CC60 /* GameScene.swift */,
 				CCEFD1E7249110EB0064CC60 /* GameViewController.swift */,
 				CCEFD1E9249110EB0064CC60 /* Main.storyboard */,
@@ -145,7 +145,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CCEFD1F8249119AF0064CC60 /* MyTileSet.sks in Resources */,
+				CCEFD1F8249119AF0064CC60 /* MainTileSet.sks in Resources */,
 				CCEFD1EB249110EB0064CC60 /* Main.storyboard in Resources */,
 				CCEFD1E2249110EB0064CC60 /* GameScene.sks in Resources */,
 				CCEFD1ED249110EC0064CC60 /* Assets.xcassets in Resources */,

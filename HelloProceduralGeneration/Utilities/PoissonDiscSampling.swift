@@ -14,17 +14,14 @@ import SpriteKit
 // (and his tutorial: https://www.youtube.com/watch?v=7WcmyxyFO7o)
 class PoissonDiscSampling {
     
-    
-    
     static func generatePoints(radius: simd_double1,
-                        sampleRegionSize: simd_double2,
-                        numSamplesBeforeRejection: Int = 30) -> [simd_double2] {
+                               sampleRegionSize: simd_double2,
+                               numSamplesBeforeRejection: Int = 30) -> [simd_double2] {
         
-        // TODO consider changing this to 128 as in tile map
         let cellSize: simd_double1 = radius / 2.squareRoot()
         
         let columns = (sampleRegionSize.x / cellSize).ceil()
-        let rows = (sampleRegionSize.y / cellSize).ceil()
+        let rows    = (sampleRegionSize.y / cellSize).ceil()
         
         // set value of all elements to 0 by default
         var grid = Array(repeating: Array(repeating: 0, count: rows), count: columns)
@@ -66,11 +63,11 @@ class PoissonDiscSampling {
     }
     
     static func isValidCandidate(_ candidateVector: simd_double2,
-                          sampleRegionSize: simd_double2,
-                          cellSize: simd_double1,
-                          radius: simd_double1,
-                          points: [simd_double2],
-                          grid: [[Int]]) -> Bool {
+                                 sampleRegionSize: simd_double2,
+                                 cellSize: simd_double1,
+                                 radius: simd_double1,
+                                 points: [simd_double2],
+                                 grid: [[Int]]) -> Bool {
         
         if  (candidateVector.x >= 0 && candidateVector.x < sampleRegionSize.x) &&
             (candidateVector.y >= 0 && candidateVector.y < sampleRegionSize.y) {
@@ -88,10 +85,7 @@ class PoissonDiscSampling {
                     let pointIndex = grid[x][y] - 1
                     if pointIndex != -1 {
                         let squareDistance = simd_length_squared(candidateVector - points[pointIndex])
-                       
-                        // TODO continue here
-//                        let diffMagnitude = vectorDifference.
-                        if squareDistance < radius*radius {
+                        if squareDistance < (radius * radius) {
                             return false
                         }
                     }

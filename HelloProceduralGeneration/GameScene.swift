@@ -9,16 +9,38 @@
 import SpriteKit
 import GameplayKit
 
+typealias TileContent = UInt32
+
+struct TileCategory {
+    static let ground: TileContent          = 1 << 0
+    static let energyCellTaken: TileContent = 1 << 0
+    static let boulder: TileContent         = 1 << 1
+    static let acid: TileContent            = 1 << 2
+    static let planeScrap: TileContent      = 1 << 3
+    static let robotScrap: TileContent      = 1 << 4
+    static let energyCell: TileContent      = 1 << 5
+    static let player: TileContent          = 1 << 6
+}
+
 class GameScene: SKScene {
     
-    let map = SKNode()
-    var player : SKSpriteNode?
+    let mapNode = SKNode()
+    var mapTilesContents = Array(
+        repeating: Array(repeating: TileCategory.ground, count: 128),
+        count: 128
+    )
+    
+    var player: SKSpriteNode?
     var cam: SKCameraNode?
+    
+    let numTilesOnSide = 128
+    
+    let tileSize = CGSize(width: 128, height: 128)
+    let (rows, columns) = (128, 128)
+    let mapSize = CGSize(width: 128 * 128, height: 128 * 128)
     
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
-    
-    
     
     override func didMove(to view: SKView) {
         setupMap()
@@ -28,70 +50,114 @@ class GameScene: SKScene {
     
     func setupMap() {
         // add the map and "zoom out"
-        addChild(map)
+        addChild(mapNode)
         
-       
-        // retrieve tile set from corresponding .sks file
-        let tileSet = SKTileSet(named: "Sample Grid Tile Set")!
-        let tileSize = CGSize(width: 128, height: 128)
-        let (rows, columns) = (128, 128)
+        // retrieve tile sets from corresponding .sks files
+        let tileSet = SKTileSet(named: "Proxima Tile Set")!
         
-        let proximaTileSet = SKTileSet(named: "Proxima Tile Set")!
-        // set tiles
-        let waterTiles = tileSet.tileGroups.first { $0.name == "Water"        }
-        let grassTiles = tileSet.tileGroups.first { $0.name == "Grass"        }
-        let boulderTiles = proximaTileSet.tileGroups.first { $0.name == "Boulder"  }
+        // MARK: fill all tiles with land tiles, by default
+        setupLandTiles(tileSet: tileSet)
         
-        // set default tile = sand tile
+        // MARK: generate acid seas using Perlin noise algorithm
+        // boulders are allowed to overwrite acid seas
+        let landTiles = tileSet.tileGroups.first { $0.name == "Land" }
+        generateAcidSeas(tileSet: tileSet,
+                         fallbackTileGroup: landTiles!)
+        
+        // MARK: generate boulders using Poisson Disc Sampling algorithm
+        let boulderDistanceRadius = 4*(2.squareRoot())
+        generateBoulders(radius: boulderDistanceRadius,
+                         tileSet: tileSet,
+                         tileToSkip: TileCategory.acid)
+        
+        // enlarge scene to contain entire generated map
+        scene?.size = mapSize
+        // set up the physics
+//        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+        
+    }
+    
+    private func setupLandTiles(tileSet: SKTileSet) {
+        let landTiles = tileSet.tileGroups.first { $0.name == "Land" }
         let bottomLayer = SKTileMapNode(tileSet: tileSet, columns: columns, rows: rows, tileSize: tileSize)
-        bottomLayer.fill(with: grassTiles)
-        map.addChild(bottomLayer)
-        
-       
-        
-        // procedural generation using Perlin noise
+        bottomLayer.fill(with: landTiles)
+        mapNode.addChild(bottomLayer)
+    }
+    
+    private func generateAcidSeas(tileSet: SKTileSet, fallbackTileGroup: SKTileGroup) {
+        let acidTiles = tileSet.tileGroups.first { $0.name == "Acid" }
         let noiseMap = makeNoiseMap(columns: columns, rows: rows)
         let topLayer = SKTileMapNode(tileSet: tileSet, columns: columns, rows: rows, tileSize: tileSize)
         topLayer.enableAutomapping = true
-        map.addChild(topLayer)
+        mapNode.addChild(topLayer)
         
         // set the tile, every column and every row
-        for column in 0 ..< columns {
+        for col in 0 ..< columns {
             for row in 0 ..< rows {
-                let location = vector2(Int32(row), Int32(column))
+                // override boulder tiles - hence no validation
+                
+                let location = vector2(Int32(row), Int32(col))
                 let terrainHeight = noiseMap.value(at: location)
 
+                // increase terrainHeight to increase acid tile probability
                 if terrainHeight < 0 {
-                    topLayer.setTileGroup(waterTiles, forColumn: column, row: row)
-                    topLayer.tileDefinition(atColumn: column, row: row)?.name = "acid"
-                } else {
-                    topLayer.tileDefinition(atColumn: column, row: row)?.name = "land"
+                    
+                    // set the tile to acid
+                    topLayer.setTileGroup(acidTiles, forColumn: col, row: row)
+                    mapTilesContents[col][row] = TileCategory.acid
                 }
-                
+            }
+        }
+    }
+    
+    private func checkWithin5x5Cluster(for tileToCheck: TileContent,
+                                       column: Int, row: Int,
+                                       maxColumnIndex: Int, maxRowIndex: Int) -> Bool {
+        // set cluster bounds
+        let minCol = max(0, column - 2)
+        let maxCol = min(maxColumnIndex, column + 2)
+        let minRow = max(0, row - 2)
+        let maxRow = min(maxRowIndex, row + 2)
+
+        for col in minCol...maxCol {
+            for row in minRow...maxRow {
+                if mapTilesContents[col][row] == tileToCheck {
+                    return true
+                }
             }
         }
         
-        scene?.size = bottomLayer.mapSize
-        // set up the physics
-//        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-        let boulderPoints = PoissonDiscSampling.generatePoints(radius: 2*(2.squareRoot()), sampleRegionSize: vector2(128,128))
-        
-      
-        let boulderLayer = SKTileMapNode(tileSet: proximaTileSet, columns: columns, rows: rows, tileSize: tileSize.getScaledSize(4))
+        return false
+    }
+    
+    private func generateBoulders(radius: simd_double1,
+                                  tileSet: SKTileSet,
+                                  tileToSkip: TileContent) {
+        let boulderLayer = SKTileMapNode(tileSet: tileSet, columns: columns, rows: rows, tileSize: tileSize)
         boulderLayer.enableAutomapping = true
-        map.addChild(boulderLayer)
+        mapNode.addChild(boulderLayer)
         
+        let boulderTiles = tileSet.tileGroups.first { $0.name == "Boulder" }
+        
+        let boulderPoints = PoissonDiscSampling.generatePoints(radius: radius, sampleRegionSize: vector2(128,128))
+        print("Boulders' count: \(boulderPoints.count)")
         
         for point in boulderPoints {
             let location = vector2(Int32(point.x), Int32(point.y))
-            let (row, column) = (Int(location.y), Int(location.x))
-            let currentTile = topLayer.tileDefinition(atColumn: column, row: row)
-            if let tile = currentTile{
-                if tile.name != "acid" {
-                   boulderLayer.setTileGroup(boulderTiles, forColumn: column, row: row)
-                   boulderLayer.tileDefinition(atColumn: column, row: row)?.name = "acid"
-                }
+            let (row, col) = (Int(location.y), Int(location.x))
+            
+            // some tiles cannot be placed boulders, such as acid
+            if checkWithin5x5Cluster(for: tileToSkip,
+                                     column: col,
+                                     row: row,
+                                     maxColumnIndex: numTilesOnSide - 1,
+                                     maxRowIndex: numTilesOnSide - 1) {
+                
+                continue
             }
+            
+            boulderLayer.setTileGroup(boulderTiles, forColumn: col, row: row)
+            mapTilesContents[col][row] = TileCategory.boulder
         }
     }
     
@@ -107,7 +173,7 @@ class GameScene: SKScene {
         cam = SKCameraNode()
         self.camera = cam
         self.addChild(cam!)
-        let zoomInAction = SKAction.scale(to: 1/10, duration: 1)
+        let zoomInAction = SKAction.scale(to: 1/10, duration: 10)
         cam!.run(zoomInAction)
     }
     
@@ -125,7 +191,7 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else {return}
+        guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         let moveToAction = SKAction.move(to: location, duration: 1)
         player!.run(moveToAction)
