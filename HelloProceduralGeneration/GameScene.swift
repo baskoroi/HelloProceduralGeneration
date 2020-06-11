@@ -31,6 +31,14 @@ class GameScene: SKScene {
     )
     
     var player: SKSpriteNode?
+    var playerFacingDown: SKAction?
+    var playerStandingUp: SKAction?
+    var playerStandingLeft: SKAction?
+    var playerStandingRight: SKAction?
+    var playerRunningUp: SKAction?
+    var playerRunningDown: SKAction?
+    var playerRunningLeft: SKAction?
+    var playerRunningRight: SKAction?
     var cam: SKCameraNode?
     
     let numTilesOnSide = 128
@@ -44,8 +52,8 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupMap()
-        setupPlayer()
         setupCamera()
+        setupPlayer()
     }
     
     func setupMap() {
@@ -86,7 +94,7 @@ class GameScene: SKScene {
     
     private func generateAcidSeas(tileSet: SKTileSet, fallbackTileGroup: SKTileGroup) {
         let acidTiles = tileSet.tileGroups.first { $0.name == "Acid" }
-        let noiseMap = makeNoiseMap(columns: columns, rows: rows)
+        let noiseMap = generatePerlinNoiseMap(columns: columns, rows: rows)
         let topLayer = SKTileMapNode(tileSet: tileSet, columns: columns, rows: rows, tileSize: tileSize)
         topLayer.enableAutomapping = true
         mapNode.addChild(topLayer)
@@ -161,24 +169,69 @@ class GameScene: SKScene {
         }
     }
     
+    // MARK: - player animations, behavior, etc.
     func setupPlayer() {
-        player = self.childNode(withName: "player") as? SKSpriteNode
+//        player = self.childNode(withName: "player") as? SKSpriteNode
+        
+        player = SKSpriteNode(imageNamed: "PlayerFacingDown")
+        self.addChild(player!)
+        
+        player!.name = "player"
+        
+        // place player on center of map
+        // divide by 10, since zoom factor = 1/10 by default
+        player!.position = CGPoint(x: 128 * 128 / 10, y: 128 * 128 / 10)
+        player!.zPosition = 1
+        
+        setupPlayerPhysicsBody()
+        setupPlayerAnimations()
+    }
+    
+    private func setupPlayerPhysicsBody() {
         player!.physicsBody = SKPhysicsBody(circleOfRadius: player!.size.width / 2)
         player!.physicsBody?.allowsRotation = true
         player!.physicsBody?.restitution = 0.5
-        player!.zPosition = 1
     }
     
-    func setupCamera() {
+    private func setupPlayerAnimations() {
+        // both standing & running
+        playerFacingDown = SKAction.run {
+            self.player?.texture = PlayerAnimations.playerFacingDownTexture
+        }
+        
+        // only standing
+        playerStandingUp = SKAction.run {
+            self.player?.texture = PlayerAnimations.playerStandingUpTexture
+        }
+        playerStandingLeft = SKAction.run {
+            self.player?.texture = PlayerAnimations.playerStandingLeftTexture
+        }
+        playerStandingRight = SKAction.run {
+            self.player?.texture = PlayerAnimations.playerStandingRightTexture
+        }
+        
+        // only running
+        playerRunningUp = SKAction.repeatForever(
+            SKAction.animate(with: PlayerAnimations.playerRunningUpTextures, timePerFrame: 0.1)
+        )
+        playerRunningLeft = SKAction.repeatForever(
+            SKAction.animate(with: PlayerAnimations.playerRunningLeftTextures, timePerFrame: 0.1)
+        )
+        playerRunningRight = SKAction.repeatForever(
+            SKAction.animate(with: PlayerAnimations.playerRunningRightTextures, timePerFrame: 0.1)
+        )
+    }
+    
+    // MARK: - scene camera
+    func setupCamera(zoomInFactor: CGFloat = 10) {
         cam = SKCameraNode()
         self.camera = cam
         self.addChild(cam!)
-        let zoomInAction = SKAction.scale(to: 1/10, duration: 10)
+        let zoomInAction = SKAction.scale(to: 1/10, duration: 1)
         cam!.run(zoomInAction)
     }
     
-        // make map to determine water, stone, or grass tiles
-    private func makeNoiseMap(columns: Int, rows: Int) -> GKNoiseMap {
+    private func generatePerlinNoiseMap(columns: Int, rows: Int) -> GKNoiseMap {
         let source = GKPerlinNoiseSource()
         source.persistence = 0.9
         
@@ -187,7 +240,8 @@ class GameScene: SKScene {
         let origin = vector2(0.0, 0.0)
         let sampleCount = vector2(Int32(columns), Int32(rows))
         
-        return GKNoiseMap(noise, size: size, origin: origin, sampleCount: sampleCount, seamless: true)
+        return GKNoiseMap(noise, size: size, origin: origin,
+                          sampleCount: sampleCount, seamless: true)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -212,12 +266,12 @@ class GameScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         super.update(currentTime)
         if let camera = cam, let player = player {
-          camera.position = player.position
+            camera.position = player.position
         }
     }
 }
 
-extension CGSize{
+extension CGSize {
     func getScaledSize(_ factor: CGFloat) -> CGSize {
         return CGSize(width: self.width, height: self.height)
     }

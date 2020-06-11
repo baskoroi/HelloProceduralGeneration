@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC8C7B2324927F3700F55A85 /* PlayerAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7B2224927F3700F55A85 /* PlayerAnimations.swift */; };
 		CCCA42FE2491CEFB004232DC /* PoissonDiscSampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCA42FD2491CEFB004232DC /* PoissonDiscSampling.swift */; };
 		CCEFD1E0249110EB0064CC60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEFD1DF249110EB0064CC60 /* AppDelegate.swift */; };
 		CCEFD1E2249110EB0064CC60 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1E1249110EB0064CC60 /* GameScene.sks */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CC8C7B2224927F3700F55A85 /* PlayerAnimations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerAnimations.swift; sourceTree = "<group>"; };
 		CCCA42FD2491CEFB004232DC /* PoissonDiscSampling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoissonDiscSampling.swift; sourceTree = "<group>"; };
 		CCEFD1DC249110EB0064CC60 /* HelloProceduralGeneration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloProceduralGeneration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCEFD1DF249110EB0064CC60 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				CCEFD1EC249110EC0064CC60 /* Assets.xcassets */,
 				CCEFD1EE249110EC0064CC60 /* LaunchScreen.storyboard */,
 				CCEFD1F1249110EC0064CC60 /* Info.plist */,
+				CC8C7B2224927F3700F55A85 /* PlayerAnimations.swift */,
 			);
 			path = HelloProceduralGeneration;
 			sourceTree = "<group>";
@@ -162,6 +165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCEFD1E6249110EB0064CC60 /* GameScene.swift in Sources */,
+				CC8C7B2324927F3700F55A85 /* PlayerAnimations.swift in Sources */,
 				CCCA42FE2491CEFB004232DC /* PoissonDiscSampling.swift in Sources */,
 				CCEFD1E8249110EB0064CC60 /* GameViewController.swift in Sources */,
 				CCEFD1E0249110EB0064CC60 /* AppDelegate.swift in Sources */,

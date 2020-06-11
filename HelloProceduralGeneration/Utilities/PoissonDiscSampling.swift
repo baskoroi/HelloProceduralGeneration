@@ -29,7 +29,7 @@ class PoissonDiscSampling {
         var points      = [simd_double2]()
         var spawnPoints = [simd_double2]()
         
-        spawnPoints.append(sampleRegionSize / 2)
+        spawnPoints.append((sampleRegionSize / 2) - 1)
         while !spawnPoints.isEmpty {
             let spawnIndex = Int.random(in: 0..<spawnPoints.count)
             let spawnCenter = spawnPoints[spawnIndex]
