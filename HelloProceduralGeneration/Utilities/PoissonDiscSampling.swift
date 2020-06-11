@@ -16,7 +16,7 @@ class PoissonDiscSampling {
     
     
     
-    func generatePoints(radius: simd_double1,
+    static func generatePoints(radius: simd_double1,
                         sampleRegionSize: simd_double2,
                         numSamplesBeforeRejection: Int = 30) -> [simd_double2] {
         
@@ -40,7 +40,7 @@ class PoissonDiscSampling {
             
             for _ in 0..<numSamplesBeforeRejection {
                 let angle = simd_double1.random(in: 0...1) * simd_double1.pi * 2
-                let directionVector = simd_double2(x: cos(angle), y: sin(angle))
+                let directionVector = simd_double2(x: sin(angle), y: cos(angle))
                 let candidateVector = spawnCenter + directionVector * simd_double1.random(in: radius...2*radius)
                 if isValidCandidate(candidateVector,
                                     sampleRegionSize: sampleRegionSize,
@@ -65,7 +65,7 @@ class PoissonDiscSampling {
         return points
     }
     
-    func isValidCandidate(_ candidateVector: simd_double2,
+    static func isValidCandidate(_ candidateVector: simd_double2,
                           sampleRegionSize: simd_double2,
                           cellSize: simd_double1,
                           radius: simd_double1,
@@ -84,15 +84,20 @@ class PoissonDiscSampling {
             let searchEndY   = min(cellY + 2, grid[0].count - 1)
             
             for x in searchStartX...searchEndX {
-                for y in searchEndX...searchEndY {
+                for y in searchStartY...searchEndY {
                     let pointIndex = grid[x][y] - 1
                     if pointIndex != -1 {
-                        let vectorDifference = candidateVector - points[pointIndex]
+                        let squareDistance = simd_length_squared(candidateVector - points[pointIndex])
+                       
                         // TODO continue here
 //                        let diffMagnitude = vectorDifference.
+                        if squareDistance < radius*radius {
+                            return false
+                        }
                     }
                 }
             }
+            return true
         }
         
         return false

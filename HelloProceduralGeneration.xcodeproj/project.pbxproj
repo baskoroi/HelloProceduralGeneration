@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		CCCA42FE2491CEFB004232DC /* PoissonDiscSampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCA42FD2491CEFB004232DC /* PoissonDiscSampling.swift */; };
-		CCCA43002491E1A3004232DC /* RandomQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCA42FF2491E1A3004232DC /* RandomQueue.swift */; };
 		CCEFD1E0249110EB0064CC60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEFD1DF249110EB0064CC60 /* AppDelegate.swift */; };
 		CCEFD1E2249110EB0064CC60 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1E1249110EB0064CC60 /* GameScene.sks */; };
 		CCEFD1E4249110EB0064CC60 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1E3249110EB0064CC60 /* Actions.sks */; };
@@ -22,7 +21,6 @@
 
 /* Begin PBXFileReference section */
 		CCCA42FD2491CEFB004232DC /* PoissonDiscSampling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoissonDiscSampling.swift; sourceTree = "<group>"; };
-		CCCA42FF2491E1A3004232DC /* RandomQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomQueue.swift; sourceTree = "<group>"; };
 		CCEFD1DC249110EB0064CC60 /* HelloProceduralGeneration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloProceduralGeneration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCEFD1DF249110EB0064CC60 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CCEFD1E1249110EB0064CC60 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -51,7 +49,6 @@
 			isa = PBXGroup;
 			children = (
 				CCCA42FD2491CEFB004232DC /* PoissonDiscSampling.swift */,
-				CCCA42FF2491E1A3004232DC /* RandomQueue.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -165,7 +162,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCEFD1E6249110EB0064CC60 /* GameScene.swift in Sources */,
-				CCCA43002491E1A3004232DC /* RandomQueue.swift in Sources */,
 				CCCA42FE2491CEFB004232DC /* PoissonDiscSampling.swift in Sources */,
 				CCEFD1E8249110EB0064CC60 /* GameViewController.swift in Sources */,
 				CCEFD1E0249110EB0064CC60 /* AppDelegate.swift in Sources */,
