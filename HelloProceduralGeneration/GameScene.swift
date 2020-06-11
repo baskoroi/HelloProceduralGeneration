@@ -25,8 +25,8 @@ class GameScene: SKScene {
     func setupMap() {
         // add the map and "zoom out of it 2x"
         addChild(map)
-        map.xScale = 0.5
-        map.yScale = 0.5
+        map.xScale = 0.1
+        map.yScale = 0.1
         
         // retrieve tile set from corresponding .sks file
         let tileSet = SKTileSet(named: "Sample Grid Tile Set")!
@@ -41,8 +41,12 @@ class GameScene: SKScene {
         
         // set default tile = sand tile
         let bottomLayer = SKTileMapNode(tileSet: tileSet, columns: columns, rows: rows, tileSize: tileSize)
-        bottomLayer.fill(with: sandTiles)
+        bottomLayer.fill(with: grassTiles)
         map.addChild(bottomLayer)
+        
+        // set scene size equal to tile map, to reset X,Y axes' values
+        // useful for next procedural item generations
+        scene?.size = bottomLayer.mapSize
         
         // procedural generation using Perlin noise
         let noiseMap = makeNoiseMap(columns: columns, rows: rows)
@@ -58,16 +62,12 @@ class GameScene: SKScene {
                 
                 if terrainHeight < 0 {
                     topLayer.setTileGroup(waterTiles, forColumn: column, row: row)
-                } else if terrainHeight > 0.9 {
-                    topLayer.setTileGroup(stoneTiles, forColumn: column, row: row)
-                } else {
-                    topLayer.setTileGroup(grassTiles, forColumn: column, row: row)
                 }
             }
         }
         
         // set up the physics
-        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+//        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
     }
     
     func setupPlayer() {
