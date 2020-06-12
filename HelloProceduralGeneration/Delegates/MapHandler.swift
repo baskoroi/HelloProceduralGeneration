@@ -10,7 +10,7 @@ import SpriteKit
 import GameplayKit
 
 protocol MapDelegate: class {
-    func setupAllComponents()
+    func setupMap()
     func setupLandTiles(tileSet: SKTileSet)
     func generateAcidSeas(tileSet: SKTileSet, fallbackTileGroup: SKTileGroup)
     func distributeTilesAroundMap(radius: simd_double1,
@@ -25,7 +25,6 @@ protocol MapDelegate: class {
                                   row: Int,
                                   maxColumnIndex: Int,
                                   maxRowIndex: Int) -> Bool
-    func generatePerlinNoiseMap(columns: Int, rows: Int) -> GKNoiseMap
 }
 
 class MapHandler {
@@ -44,7 +43,7 @@ class MapHandler {
     let area = CGSize(width: 128 * 128, height: 128 * 128)
     
     func setup() {
-        delegate?.setupAllComponents()
+        delegate?.setupMap()
     }
     
 }

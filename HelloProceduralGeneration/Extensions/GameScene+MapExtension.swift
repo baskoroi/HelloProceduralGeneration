@@ -7,11 +7,10 @@
 //
 
 import SpriteKit
-import GameplayKit
 
 extension GameScene: MapDelegate {
 
-    func setupAllComponents() {        
+    func setupMap() {
         // add the map and "zoom out"
         addChild(mapHandler.node)
         
@@ -97,7 +96,7 @@ extension GameScene: MapDelegate {
         let (columns, rows) = (mapHandler.columns, mapHandler.rows)
         
         let acidTiles = tileSet.tileGroups.first { $0.name == "Acid" }
-        let noiseMap = generatePerlinNoiseMap(columns: columns, rows: rows)
+        let noiseMap = PerlinNoise.generateNoiseMap(columns: columns, rows: rows)
         let topLayer = SKTileMapNode(tileSet: tileSet,
                                      columns: columns,
                                      rows: rows,
@@ -209,19 +208,6 @@ extension GameScene: MapDelegate {
         }
         
         return false
-    }
-    
-    func generatePerlinNoiseMap(columns: Int, rows: Int) -> GKNoiseMap {
-        let source = GKPerlinNoiseSource()
-        source.persistence = 0.9
-        
-        let noise = GKNoise(source)
-        let size = vector2(1.0, 1.0)
-        let origin = vector2(0.0, 0.0)
-        let sampleCount = vector2(Int32(columns), Int32(rows))
-        
-        return GKNoiseMap(noise, size: size, origin: origin,
-                          sampleCount: sampleCount, seamless: true)
     }
     
 }
