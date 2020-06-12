@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "left6.pdf",
+      "filename" : "PlayerRunningLeft6.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "PlayerRunningLeft6@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "PlayerRunningLeft6@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

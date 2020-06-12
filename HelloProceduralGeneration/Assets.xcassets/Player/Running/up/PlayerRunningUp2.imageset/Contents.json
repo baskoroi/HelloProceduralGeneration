@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "up2.pdf",
+      "filename" : "PlayerRunningUp2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "PlayerRunningUp2@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "PlayerRunningUp2@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

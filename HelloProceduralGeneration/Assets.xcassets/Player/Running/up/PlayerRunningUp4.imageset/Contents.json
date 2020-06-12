@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "up4.pdf",
+      "filename" : "PlayerRunningUp4.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "PlayerRunningUp4@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "PlayerRunningUp4@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -16,8 +16,8 @@ struct TileCategory {
     static let energyCellTaken: TileContent = 1 << 0
     static let boulder: TileContent         = 1 << 1
     static let acid: TileContent            = 1 << 2
-    static let planeScrap: TileContent      = 1 << 3
-    static let robotScrap: TileContent      = 1 << 4
+    static let planeDebris: TileContent     = 1 << 3
+    static let brokenRobots: TileContent    = 1 << 4
     static let energyCell: TileContent      = 1 << 5
     static let player: TileContent          = 1 << 6
 }
@@ -30,6 +30,9 @@ class GameScene: SKScene {
         count: 128
     )
     
+    var cam: SKCameraNode?
+    var zoomInFactor: CGFloat = 10
+    
     var player: SKSpriteNode?
     var playerFacingDown: SKAction? // for both running + standing
     var playerStandingUp: SKAction?
@@ -38,9 +41,10 @@ class GameScene: SKScene {
     var playerRunningUp: SKAction?
     var playerRunningLeft: SKAction?
     var playerRunningRight: SKAction?
-    var cam: SKCameraNode?
+    var idleAfterMoveAction: SKAction?
     
     let numTilesOnSide = 128
+    let tileLength = 128
     
     let tileSize = CGSize(width: 128, height: 128)
     let (rows, columns) = (128, 128)
@@ -71,17 +75,56 @@ class GameScene: SKScene {
         generateAcidSeas(tileSet: tileSet,
                          fallbackTileGroup: landTiles!)
         
-        // MARK: generate boulders using Poisson Disc Sampling algorithm
-        let boulderDistanceRadius = 4*(2.squareRoot())
-        generateBoulders(radius: boulderDistanceRadius,
-                         tileSet: tileSet,
-                         tileToSkip: TileCategory.acid)
+        // create layer to insert items
+        let itemsLayer = SKTileMapNode(tileSet: tileSet,
+                                       columns: columns,
+                                       rows: rows,
+                                       tileSize: tileSize)
+        itemsLayer.enableAutomapping = true
+        mapNode.addChild(itemsLayer)
+        
+        // MARK: generate boulders around land (w/ Poisson Disc Sampling)
+        distributeTilesAroundMap(radius: 4,
+                                 layer: itemsLayer,
+                                 tileSet: tileSet,
+                                 tileGroupName: "Boulder",
+                                 tileToAssign: TileCategory.boulder,
+                                 tilesToSkip: [TileCategory.acid],
+                                 enableCollision: true)
+        
+        // MARK: generate energy cells around land
+        distributeTilesAroundMap(radius: 3 * 2.squareRoot(),
+                                 layer: itemsLayer,
+                                 tileSet: tileSet,
+                                 tileGroupName: "Energy Cell",
+                                 tileToAssign: TileCategory.energyCell,
+                                 tilesToSkip: [TileCategory.acid,
+                                               TileCategory.boulder])
+        
+        // MARK: generate broken robots around land
+        distributeTilesAroundMap(radius: 5,
+                                 layer: itemsLayer,
+                                 tileSet: tileSet,
+                                 tileGroupName: "Broken Robot",
+                                 tileToAssign: TileCategory.brokenRobots,
+                                 tilesToSkip: [TileCategory.acid,
+                                               TileCategory.boulder,
+                                               TileCategory.energyCell])
+        
+        // MARK: generate plane debris around land
+        distributeTilesAroundMap(radius: 6,
+                                 layer: itemsLayer,
+                                 tileSet: tileSet,
+                                 tileGroupName: "Plane Debris",
+                                 tileToAssign: TileCategory.brokenRobots,
+                                 tilesToSkip: [TileCategory.acid,
+                                               TileCategory.boulder,
+                                               TileCategory.energyCell,
+                                               TileCategory.brokenRobots])
         
         // enlarge scene to contain entire generated map
         scene?.size = mapSize
         // set up the physics
-//        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-        
     }
     
     private func setupLandTiles(tileSet: SKTileSet) {
@@ -117,9 +160,52 @@ class GameScene: SKScene {
         }
     }
     
-    private func checkWithin5x5Cluster(for tileToCheck: TileContent,
-                                       column: Int, row: Int,
-                                       maxColumnIndex: Int, maxRowIndex: Int) -> Bool {
+    // generate tiles with even positional distribution using
+    // Poisson Disc Sampling algorithm
+    private func distributeTilesAroundMap(radius: simd_double1,
+                                 layer: SKTileMapNode,
+                                 tileSet: SKTileSet,
+                                 tileGroupName: String,
+                                 tileToAssign: TileContent,
+                                 tilesToSkip: [TileContent],
+                                 enableCollision: Bool = false) {
+        
+        let tiles = tileSet.tileGroups.first { $0.name == tileGroupName }
+        
+        let points = PoissonDiscSampling.generatePoints(radius: radius, sampleRegionSize: vector2(128,128))
+        
+        for point in points {
+            let location = vector2(Int32(point.x), Int32(point.y))
+            let (row, col) = (Int(location.y), Int(location.x))
+            
+            // some tiles cannot be placed above other tiles,
+            // to avoid unintended overlaps
+            // e.g. acid tiles cannot be placed close to surrounding boulder tiles
+            if findTileWithin5x5Cluster(for: tilesToSkip,
+                                        column: col,
+                                        row: row,
+                                        maxColumnIndex: numTilesOnSide - 1,
+                                        maxRowIndex: numTilesOnSide - 1) {
+                
+                continue
+            }
+            
+            layer.setTileGroup(tiles, forColumn: col, row: row)
+            mapTilesContents[col][row] = tileToAssign
+            
+//            if enableCollision {
+//                let x = CGFloat(col) * tileSize.width
+//                let y = CGFloat(row) * tileSize.height
+//            }
+        }
+    }
+    
+    private func findTileWithin5x5Cluster(for tilesToCheck: [TileContent],
+                                          column: Int,
+                                          row: Int,
+                                          maxColumnIndex: Int,
+                                          maxRowIndex: Int) -> Bool {
+        
         // set cluster bounds
         let minCol = max(0, column - 2)
         let maxCol = min(maxColumnIndex, column + 2)
@@ -128,44 +214,13 @@ class GameScene: SKScene {
 
         for col in minCol...maxCol {
             for row in minRow...maxRow {
-                if mapTilesContents[col][row] == tileToCheck {
+                if tilesToCheck.contains(mapTilesContents[col][row]) {
                     return true
                 }
             }
         }
         
         return false
-    }
-    
-    private func generateBoulders(radius: simd_double1,
-                                  tileSet: SKTileSet,
-                                  tileToSkip: TileContent) {
-        let boulderLayer = SKTileMapNode(tileSet: tileSet, columns: columns, rows: rows, tileSize: tileSize)
-        boulderLayer.enableAutomapping = true
-        mapNode.addChild(boulderLayer)
-        
-        let boulderTiles = tileSet.tileGroups.first { $0.name == "Boulder" }
-        
-        let boulderPoints = PoissonDiscSampling.generatePoints(radius: radius, sampleRegionSize: vector2(128,128))
-        print("Boulders' count: \(boulderPoints.count)")
-        
-        for point in boulderPoints {
-            let location = vector2(Int32(point.x), Int32(point.y))
-            let (row, col) = (Int(location.y), Int(location.x))
-            
-            // some tiles cannot be placed boulders, such as acid
-            if checkWithin5x5Cluster(for: tileToSkip,
-                                     column: col,
-                                     row: row,
-                                     maxColumnIndex: numTilesOnSide - 1,
-                                     maxRowIndex: numTilesOnSide - 1) {
-                
-                continue
-            }
-            
-            boulderLayer.setTileGroup(boulderTiles, forColumn: col, row: row)
-            mapTilesContents[col][row] = TileCategory.boulder
-        }
     }
     
     // MARK: - player animations, behavior, etc.
@@ -179,7 +234,7 @@ class GameScene: SKScene {
         
         // place player on center of map
         // divide by 10, since zoom factor = 1/10 by default
-        player!.position = CGPoint(x: 128 * 128 / 10, y: 128 * 128 / 10)
+        player!.position = CGPoint(x: 128 * 128 / zoomInFactor, y: 128 * 128 / zoomInFactor)
         player!.zPosition = 1
         
         setupPlayerPhysicsBody()
@@ -187,9 +242,21 @@ class GameScene: SKScene {
     }
     
     private func setupPlayerPhysicsBody() {
-        player!.physicsBody = SKPhysicsBody(circleOfRadius: player!.size.width / 2)
-        player!.physicsBody?.allowsRotation = true
-        player!.physicsBody?.restitution = 0.5
+        guard let player = player else { return }
+        
+        player.physicsBody = SKPhysicsBody(
+            rectangleOf: CGSize(width: player.size.width,
+                                height: player.size.height)
+        )
+        player.physicsBody?.restitution = 0.4
+        player.physicsBody?.categoryBitMask = TileCategory.player
+        player.physicsBody?.contactTestBitMask =
+            TileCategory.acid | TileCategory.boulder |
+            TileCategory.energyCell | TileCategory.planeDebris |
+            TileCategory.brokenRobots
+        player.physicsBody?.collisionBitMask =
+            TileCategory.boulder | TileCategory.planeDebris |
+            TileCategory.brokenRobots
     }
     
     private func setupPlayerAnimations() {
@@ -223,19 +290,18 @@ class GameScene: SKScene {
                              timePerFrame: 0.1)
         )
         
-        // set default action to player facing down
-        if let player = player, let facingDown = playerFacingDown {
-            player.run(facingDown,
-                       withKey: PlayerAnimations.ActionKeys.standing.rawValue)
-        }
+        // by default, set player's idle animation to facing down
+        // it doesn't have any movement speed in the start
+        idleAfterMoveAction = playerFacingDown
+        standPlayerStill()
     }
     
     // MARK: - scene camera
-    func setupCamera(zoomInFactor: CGFloat = 10) {
+    func setupCamera() {
         cam = SKCameraNode()
         self.camera = cam
         self.addChild(cam!)
-        let zoomInAction = SKAction.scale(to: 1/10, duration: 1)
+        let zoomInAction = SKAction.scale(to: CGFloat(1) / zoomInFactor, duration: 1)
         cam!.run(zoomInAction)
     }
     
@@ -267,7 +333,8 @@ class GameScene: SKScene {
             , let playerStandingRight = playerStandingRight
             , let playerStandingUp = playerStandingUp
             , let playerStandingLeft = playerStandingLeft
-            , let playerFacingDown = playerFacingDown else { return }
+            , let playerFacingDown = playerFacingDown
+            , idleAfterMoveAction != nil else { return }
         
         let movingActionKey = PlayerAnimations.ActionKeys.moving.rawValue
         
@@ -280,50 +347,42 @@ class GameScene: SKScene {
         let angle = atan2(dy, dx)
         let quarterRadian = CGFloat.pi / 4
         
-        let moveDuration: TimeInterval
-        let speed = 500
+//        let moveDuration: TimeInterval
+        let speed: CGFloat = 500 // move 500 screen points every second
         
         let movePlayerAction: SKAction
         let animatePlayerAction: SKAction
-        let idleAfterMoveAction: SKAction
         
         // due to the visual nature of the game, only 4-way controls are allowed
+        // player needs to hold screen in order to keep moving
         switch angle {
         case (-quarterRadian) ..< quarterRadian: // right
             animatePlayerAction = playerRunningRight
             idleAfterMoveAction = playerStandingRight
             
-            moveDuration = TimeInterval(dx / CGFloat(speed))
-            movePlayerAction = SKAction.moveBy(x: dx, y: 0, duration: moveDuration)
+            movePlayerAction = SKAction.repeatForever(SKAction.moveBy(x: speed, y: 0, duration: 1))
             
         case quarterRadian ..< 3 * quarterRadian: // up
             animatePlayerAction = playerRunningUp
             idleAfterMoveAction = playerStandingUp
             
-            // CGVector(dx: 0, dy: dy)
-            moveDuration = TimeInterval(dy / CGFloat(speed))
-            movePlayerAction = SKAction.moveBy(x: 0, y: dy, duration: moveDuration)
+            movePlayerAction = SKAction.repeatForever(SKAction.moveBy(x: 0, y: speed, duration: 1))
             
         case 3 * quarterRadian ..< CGFloat.pi, -CGFloat.pi ..< -3 * quarterRadian: // left
             animatePlayerAction = playerRunningLeft
             idleAfterMoveAction = playerStandingLeft
             
-            // CGVector(dx: dx, dy: 0)
-            moveDuration = TimeInterval(-dx / CGFloat(speed))
-            movePlayerAction = SKAction.moveBy(x: dx, y: 0, duration: moveDuration)
+            movePlayerAction = SKAction.repeatForever(SKAction.moveBy(x: -speed, y: 0, duration: 1))
         default: // down
             animatePlayerAction = playerFacingDown
             idleAfterMoveAction = playerFacingDown
             
-            // CGVector(dx: 0, dy: dy)
-            moveDuration = TimeInterval(-dy / CGFloat(speed))
-            movePlayerAction = SKAction.moveBy(x: 0, y: dy, duration: moveDuration)
+            movePlayerAction = SKAction.repeatForever(SKAction.moveBy(x: 0, y: -speed, duration: 1))
         }
         
 //        let
         let moveActionGroup = SKAction.group([movePlayerAction, animatePlayerAction])
-        let actionSequence = SKAction.sequence([moveActionGroup, idleAfterMoveAction])
-        player.run(actionSequence, withKey: movingActionKey)
+        player.run(moveActionGroup, withKey: movingActionKey)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -331,11 +390,18 @@ class GameScene: SKScene {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        standPlayerStill()
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         
+    }
+    
+    private func standPlayerStill() {
+        guard let player = player
+            , let idleAfterMoveAction = idleAfterMoveAction else { return }
+        player.removeAction(forKey: PlayerAnimations.ActionKeys.moving.rawValue)
+        player.run(idleAfterMoveAction, withKey: PlayerAnimations.ActionKeys.standing.rawValue)
     }
     
     override func update(_ currentTime: TimeInterval) {
