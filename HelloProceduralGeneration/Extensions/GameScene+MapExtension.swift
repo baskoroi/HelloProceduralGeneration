@@ -104,6 +104,9 @@ extension GameScene: MapDelegate {
         topLayer.enableAutomapping = true
         mapHandler.node.addChild(topLayer)
         
+        let halfWidth  = CGFloat(topLayer.numberOfColumns) / 2.0 * mapHandler.tileSize.width
+        let halfHeight = CGFloat(topLayer.numberOfRows) / 2.0 * mapHandler.tileSize.height
+        
         // set the tile, every column and every row
         for col in 0 ..< columns {
             for row in 0 ..< rows {
@@ -118,9 +121,69 @@ extension GameScene: MapDelegate {
                     // set the tile to acid
                     topLayer.setTileGroup(acidTiles, forColumn: col, row: row)
                     mapHandler.tiles[col][row] = TileCategory.acid
+                    
+                    assignPhysicsBodyToTile(col: col, row: row, halfWidth: halfWidth, halfHeight: halfHeight, layer: topLayer, categoryBitMask: TileCategory.acid)
                 }
             }
         }
+    }
+    
+// TODO finish this temp function: to optimize nodes# for acid tiles
+//    func activateAcidContactPhysics(layer: SKTileMapNode) {
+//
+//        let (columns, rows) = (mapHandler.columns, mapHandler.rows)
+//        // thinking time
+//        // 1. kenapa cols doang?
+//        for col in 0 ..< columns {
+//            if var firstRow = mapHandler.tiles[col].firstIndex(of: TileCategory.acid),
+//                var lastRow = mapHandler.tiles[col].lastIndex(of: TileCategory.acid) {
+//
+//                firstRow -= 1
+//                lastRow += 1
+//
+//                var rowsIndexes = [firstRow, lastRow]
+//
+//                if firstRow < 0 {
+//                    rowsIndexes.removeFirst()
+//                }
+//                if lastRow >= rows {
+//                    rowsIndexes.removeLast()
+//                }
+//
+//                for row in rowsIndexes {
+//
+//                }
+//            }
+//        }
+//    }
+    
+    private func assignPhysicsBodyToTile(col: Int, row: Int,
+                                         halfWidth: CGFloat, halfHeight: CGFloat,
+                                         layer: SKTileMapNode,
+                                         categoryBitMask: TileContent,
+                                         collisionBitMask: TileContent = 0) {
+        let x = CGFloat(col) * mapHandler.tileSize.width - halfWidth //+ (tileSize.width / 2)
+        let y = CGFloat(row) * mapHandler.tileSize.height - halfHeight //+ (tileSize.height / 2)
+        
+        let rect = CGRect(x: 0, y: 0,
+                          width: mapHandler.tileSize.width, height: mapHandler.tileSize.height)
+        
+        let tileNode = SKShapeNode(rect: rect)
+        tileNode.strokeColor = .yellow
+        layer.addChild(tileNode)
+        tileNode.position = CGPoint(x: x, y: y)
+        tileNode.physicsBody = SKPhysicsBody(
+            rectangleOf: mapHandler.tileSize,
+            center: CGPoint(
+                x: mapHandler.tileSize.width / 2.0,
+                y: mapHandler.tileSize.height / 2.0
+            )
+        )
+        tileNode.physicsBody?.isDynamic = false
+        tileNode.physicsBody?.allowsRotation = false
+        tileNode.physicsBody?.restitution = 0.0
+        tileNode.physicsBody?.categoryBitMask = categoryBitMask
+        tileNode.physicsBody?.collisionBitMask = collisionBitMask
     }
     
     // generate tiles with even positional distribution using
@@ -160,29 +223,7 @@ extension GameScene: MapDelegate {
             mapHandler.tiles[col][row] = tileToAssign
             
             if enableCollision {
-                
-                let x = CGFloat(col) * mapHandler.tileSize.width - halfWidth //+ (tileSize.width / 2)
-                let y = CGFloat(row) * mapHandler.tileSize.height - halfHeight //+ (tileSize.height / 2)
-                
-                let rect = CGRect(x: 0, y: 0,
-                                  width: mapHandler.tileSize.width, height: mapHandler.tileSize.height)
-                
-                let tileNode = SKShapeNode(rect: rect)
-                tileNode.strokeColor = .yellow
-                layer.addChild(tileNode)
-                tileNode.position = CGPoint(x: x, y: y)
-                tileNode.physicsBody = SKPhysicsBody(
-                    rectangleOf: mapHandler.tileSize,
-                    center: CGPoint(
-                        x: mapHandler.tileSize.width / 2.0,
-                        y: mapHandler.tileSize.height / 2.0
-                    )
-                )
-                tileNode.physicsBody?.isDynamic = false
-                tileNode.physicsBody?.allowsRotation = false
-                tileNode.physicsBody?.restitution = 0.2
-                tileNode.physicsBody?.categoryBitMask = tileToAssign
-                tileNode.physicsBody?.collisionBitMask = TileCategory.player
+                assignPhysicsBodyToTile(col: col, row: row, halfWidth: halfWidth, halfHeight: halfHeight, layer: layer, categoryBitMask: tileToAssign, collisionBitMask: TileCategory.player)
             }
         }
     }
