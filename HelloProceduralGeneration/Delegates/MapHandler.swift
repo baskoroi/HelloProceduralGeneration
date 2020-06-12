@@ -28,7 +28,7 @@ protocol MapDelegate: class {
     func generatePerlinNoiseMap(columns: Int, rows: Int) -> GKNoiseMap
 }
 
-class Map {
+class MapHandler {
     
     weak var delegate: MapDelegate?
     

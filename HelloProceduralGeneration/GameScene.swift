@@ -11,12 +11,11 @@ import GameplayKit
 
 class GameScene: SKScene {
         
-    var map = Map()
+    var mapHandler = MapHandler()
+    var cameraHandler = CameraHandler(zoomInFactor: 14)
     
-    var cam: SKCameraNode?
+//    var cam: SKCameraNode?
     let zoomInFactor: CGFloat = 14
-    let (screenWidth, screenHeight) = (UIScreen.main.bounds.width,
-                                       UIScreen.main.bounds.height)
     
     var player: SKSpriteNode?
     var playerSize = CGSize(width: 128, height: 128)
@@ -33,9 +32,10 @@ class GameScene: SKScene {
     var graphs = [String : GKGraph]()
     
     override func didMove(to view: SKView) {
-        map.delegate = self
-        map.setup()
+        mapHandler.delegate = self
+        mapHandler.setup()
         
+        cameraHandler.delegate = self
         setupCamera()
         setupPlayer()
     }
@@ -173,13 +173,13 @@ class GameScene: SKScene {
     }
 
     // MARK: - scene camera
-    func setupCamera() {
-        cam = SKCameraNode()
-        self.camera = cam
-        self.addChild(cam!)
-        let zoomInAction = SKAction.scale(to: CGFloat(1) / zoomInFactor, duration: 1)
-        cam!.run(zoomInAction)
-    }
+//    func setupCamera() {
+//        cam = SKCameraNode()
+//        self.camera = cam
+//        self.addChild(cam!)
+//        let zoomInAction = SKAction.scale(to: CGFloat(1) / zoomInFactor, duration: 1)
+//        cam!.run(zoomInAction)
+//    }
     
 //    private func generatePerlinNoiseMap(columns: Int, rows: Int) -> GKNoiseMap {
 //        let source = GKPerlinNoiseSource()
@@ -223,14 +223,8 @@ class GameScene: SKScene {
     // MARK: - camera tracking
     override func update(_ currentTime: TimeInterval) {
         super.update(currentTime)
-        if let camera = cam, let player = player {
+        if let camera = cameraHandler.node, let player = player {
             camera.position = player.position
         }
-    }
-}
-
-extension CGSize {
-    func getScaledSize(_ factor: CGFloat) -> CGSize {
-        return CGSize(width: self.width, height: self.height)
     }
 }

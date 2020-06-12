@@ -13,7 +13,7 @@ extension GameScene: MapDelegate {
 
     func setupAllComponents() {        
         // add the map and "zoom out"
-        self.addChild(map.node)
+        addChild(mapHandler.node)
         
         // retrieve tile sets from corresponding .sks files
         let tileSet = SKTileSet(named: "Proxima Tile Set")!
@@ -29,11 +29,11 @@ extension GameScene: MapDelegate {
         
         // create layer to insert items
         let itemsLayer = SKTileMapNode(tileSet: tileSet,
-                                       columns: map.columns,
-                                       rows: map.rows,
-                                       tileSize: map.tileSize)
+                                       columns: mapHandler.columns,
+                                       rows: mapHandler.rows,
+                                       tileSize: mapHandler.tileSize)
         itemsLayer.enableAutomapping = true
-        map.node.addChild(itemsLayer)
+        mapHandler.node.addChild(itemsLayer)
         
         // MARK: generate boulders around land (w/ Poisson Disc Sampling)
         distributeTilesAroundMap(radius: 4,
@@ -77,7 +77,7 @@ extension GameScene: MapDelegate {
                                                TileCategory.brokenRobots],
                                  enableCollision: true)
         
-        scene?.size = map.area
+        scene?.size = mapHandler.area
         
         // TODO set up scene edge physics here
     }
@@ -85,25 +85,25 @@ extension GameScene: MapDelegate {
     func setupLandTiles(tileSet: SKTileSet) {
         let landTiles = tileSet.tileGroups.first { $0.name == "Land" }
         let bottomLayer = SKTileMapNode(tileSet: tileSet,
-                                        columns: map.columns,
-                                        rows: map.rows,
-                                        tileSize: map.tileSize)
+                                        columns: mapHandler.columns,
+                                        rows: mapHandler.rows,
+                                        tileSize: mapHandler.tileSize)
         bottomLayer.fill(with: landTiles)
-        map.node.addChild(bottomLayer)
+        mapHandler.node.addChild(bottomLayer)
     }
     
     func generateAcidSeas(tileSet: SKTileSet, fallbackTileGroup: SKTileGroup) {
         
-        let (columns, rows) = (map.columns, map.rows)
+        let (columns, rows) = (mapHandler.columns, mapHandler.rows)
         
         let acidTiles = tileSet.tileGroups.first { $0.name == "Acid" }
         let noiseMap = generatePerlinNoiseMap(columns: columns, rows: rows)
         let topLayer = SKTileMapNode(tileSet: tileSet,
                                      columns: columns,
                                      rows: rows,
-                                     tileSize: map.tileSize)
+                                     tileSize: mapHandler.tileSize)
         topLayer.enableAutomapping = true
-        map.node.addChild(topLayer)
+        mapHandler.node.addChild(topLayer)
         
         // set the tile, every column and every row
         for col in 0 ..< columns {
@@ -118,7 +118,7 @@ extension GameScene: MapDelegate {
                     
                     // set the tile to acid
                     topLayer.setTileGroup(acidTiles, forColumn: col, row: row)
-                    map.tiles[col][row] = TileCategory.acid
+                    mapHandler.tiles[col][row] = TileCategory.acid
                 }
             }
         }
@@ -138,8 +138,8 @@ extension GameScene: MapDelegate {
         
         let points = PoissonDiscSampling.generatePoints(radius: radius, sampleRegionSize: vector2(128,128))
         
-        let halfWidth  = CGFloat(layer.numberOfColumns) / 2.0 * map.tileSize.width
-        let halfHeight = CGFloat(layer.numberOfRows) / 2.0 * map.tileSize.height
+        let halfWidth  = CGFloat(layer.numberOfColumns) / 2.0 * mapHandler.tileSize.width
+        let halfHeight = CGFloat(layer.numberOfRows) / 2.0 * mapHandler.tileSize.height
         
         for point in points {
             let location = vector2(Int32(point.x), Int32(point.y))
@@ -151,32 +151,32 @@ extension GameScene: MapDelegate {
             if findTileWithin5x5Cluster(for: tilesToSkip,
                                         column: col,
                                         row: row,
-                                        maxColumnIndex: map.numTilesOnSide - 1,
-                                        maxRowIndex: map.numTilesOnSide - 1) {
+                                        maxColumnIndex: mapHandler.numTilesOnSide - 1,
+                                        maxRowIndex: mapHandler.numTilesOnSide - 1) {
                 
                 continue
             }
             
             layer.setTileGroup(tiles, forColumn: col, row: row)
-            map.tiles[col][row] = tileToAssign
+            mapHandler.tiles[col][row] = tileToAssign
             
             if enableCollision {
                 
-                let x = CGFloat(col) * map.tileSize.width - halfWidth //+ (tileSize.width / 2)
-                let y = CGFloat(row) * map.tileSize.height - halfHeight //+ (tileSize.height / 2)
+                let x = CGFloat(col) * mapHandler.tileSize.width - halfWidth //+ (tileSize.width / 2)
+                let y = CGFloat(row) * mapHandler.tileSize.height - halfHeight //+ (tileSize.height / 2)
                 
                 let rect = CGRect(x: 0, y: 0,
-                                  width: map.tileSize.width, height: map.tileSize.height)
+                                  width: mapHandler.tileSize.width, height: mapHandler.tileSize.height)
                 
                 let tileNode = SKShapeNode(rect: rect)
                 tileNode.strokeColor = .yellow
                 layer.addChild(tileNode)
                 tileNode.position = CGPoint(x: x, y: y)
                 tileNode.physicsBody = SKPhysicsBody(
-                    rectangleOf: map.tileSize,
+                    rectangleOf: mapHandler.tileSize,
                     center: CGPoint(
-                        x: map.tileSize.width / 2.0,
-                        y: map.tileSize.height / 2.0
+                        x: mapHandler.tileSize.width / 2.0,
+                        y: mapHandler.tileSize.height / 2.0
                     )
                 )
                 tileNode.physicsBody?.isDynamic = false
@@ -202,7 +202,7 @@ extension GameScene: MapDelegate {
 
         for col in minCol...maxCol {
             for row in minRow...maxRow {
-                if tilesToCheck.contains(map.tiles[col][row]) {
+                if tilesToCheck.contains(mapHandler.tiles[col][row]) {
                     return true
                 }
             }
