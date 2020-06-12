@@ -11,5 +11,9 @@ import SpriteKit
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        
+        if contactMask == TileCategory.player | TileCategory.acid {
+            print("AAAAAA SAKIT")
+        }
     }
 }

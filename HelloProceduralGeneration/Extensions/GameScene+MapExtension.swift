@@ -161,7 +161,8 @@ extension GameScene: MapDelegate {
                                          halfWidth: CGFloat, halfHeight: CGFloat,
                                          layer: SKTileMapNode,
                                          categoryBitMask: TileContent,
-                                         collisionBitMask: TileContent = 0) {
+                                         collisionBitMask: TileContent = 0,
+                                         contactTestBitMask: TileContent = TileCategory.player) {
         let x = CGFloat(col) * mapHandler.tileSize.width - halfWidth //+ (tileSize.width / 2)
         let y = CGFloat(row) * mapHandler.tileSize.height - halfHeight //+ (tileSize.height / 2)
         
@@ -184,6 +185,7 @@ extension GameScene: MapDelegate {
         tileNode.physicsBody?.restitution = 0.0
         tileNode.physicsBody?.categoryBitMask = categoryBitMask
         tileNode.physicsBody?.collisionBitMask = collisionBitMask
+        tileNode.physicsBody?.contactTestBitMask = contactTestBitMask
     }
     
     // generate tiles with even positional distribution using
