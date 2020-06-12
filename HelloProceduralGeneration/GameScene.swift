@@ -12,6 +12,7 @@ import GameplayKit
 typealias TileContent = UInt32
 
 struct TileCategory {
+    static let none: TileContent            = 1 << 0
     static let ground: TileContent          = 1 << 0
     static let energyCellTaken: TileContent = 1 << 0
     static let boulder: TileContent         = 1 << 1
@@ -31,7 +32,7 @@ class GameScene: SKScene {
     )
     
     var cam: SKCameraNode?
-    var zoomInFactor: CGFloat = 10
+    var zoomInFactor: CGFloat = 15
     
     var player: SKSpriteNode?
     var playerFacingDown: SKAction? // for both running + standing
@@ -122,9 +123,9 @@ class GameScene: SKScene {
                                                TileCategory.energyCell,
                                                TileCategory.brokenRobots])
         
-        // enlarge scene to contain entire generated map
         scene?.size = mapSize
-        // set up the physics
+        
+        // TODO set up scene edge physics here
     }
     
     private func setupLandTiles(tileSet: SKTileSet) {
@@ -174,6 +175,9 @@ class GameScene: SKScene {
         
         let points = PoissonDiscSampling.generatePoints(radius: radius, sampleRegionSize: vector2(128,128))
         
+        let halfWidth  = CGFloat(layer.numberOfColumns) / 2.0 * tileSize.width
+        let halfHeight = CGFloat(layer.numberOfRows) / 2.0 * tileSize.height
+        
         for point in points {
             let location = vector2(Int32(point.x), Int32(point.y))
             let (row, col) = (Int(location.y), Int(location.x))
@@ -193,10 +197,25 @@ class GameScene: SKScene {
             layer.setTileGroup(tiles, forColumn: col, row: row)
             mapTilesContents[col][row] = tileToAssign
             
-//            if enableCollision {
-//                let x = CGFloat(col) * tileSize.width
-//                let y = CGFloat(row) * tileSize.height
-//            }
+            if enableCollision {
+                
+                let x = CGFloat(col) * tileSize.width - halfWidth //+ (tileSize.width / 2)
+                let y = CGFloat(row) * tileSize.height - halfHeight //+ (tileSize.height / 2)
+                
+                let rect = CGRect(x: 0, y: 0,
+                                  width: tileSize.width, height: tileSize.height)
+                
+                let tileNode = SKShapeNode(rect: rect)
+                tileNode.strokeColor = .yellow
+                layer.addChild(tileNode)
+                tileNode.position = CGPoint(x: x, y: y)
+                tileNode.physicsBody = SKPhysicsBody(rectangleOf: tileSize, center: CGPoint(x: tileSize.width / 2.0, y: tileSize.height / 2.0))
+                tileNode.physicsBody?.isDynamic = false
+                tileNode.physicsBody?.allowsRotation = false
+                tileNode.physicsBody?.restitution = 0.2
+                tileNode.physicsBody?.categoryBitMask = tileToAssign
+                tileNode.physicsBody?.collisionBitMask = TileCategory.player
+            }
         }
     }
     
@@ -228,6 +247,7 @@ class GameScene: SKScene {
 //        player = self.childNode(withName: "player") as? SKSpriteNode
         
         player = SKSpriteNode(imageNamed: "PlayerFacingDown")
+        
         self.addChild(player!)
         
         player!.name = "player"
@@ -245,10 +265,11 @@ class GameScene: SKScene {
         guard let player = player else { return }
         
         player.physicsBody = SKPhysicsBody(
-            rectangleOf: CGSize(width: player.size.width,
-                                height: player.size.height)
+            rectangleOf: CGSize(width: tileSize.width,
+                                height: tileSize.height)
         )
         player.physicsBody?.restitution = 0.4
+        player.physicsBody?.allowsRotation = false
         player.physicsBody?.categoryBitMask = TileCategory.player
         player.physicsBody?.contactTestBitMask =
             TileCategory.acid | TileCategory.boulder |
@@ -348,7 +369,7 @@ class GameScene: SKScene {
         let quarterRadian = CGFloat.pi / 4
         
 //        let moveDuration: TimeInterval
-        let speed: CGFloat = 500 // move 500 screen points every second
+        let speed: CGFloat = 540 // move 500 screen points every second
         
         let movePlayerAction: SKAction
         let animatePlayerAction: SKAction
