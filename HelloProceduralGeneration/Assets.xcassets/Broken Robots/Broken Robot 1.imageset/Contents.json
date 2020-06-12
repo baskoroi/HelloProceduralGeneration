@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Asset 37.png",
+      "filename" : "OrangeRbt.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Asset 37@2x.png",
+      "filename" : "OrangeRbt@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Asset 37@3x.png",
+      "filename" : "OrangeRbt@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

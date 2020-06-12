@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Asset 23.png",
+      "filename" : "BotrightAcd.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Asset 23@2x.png",
+      "filename" : "BotrightAcd@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Asset 23@3x.png",
+      "filename" : "BotrightAcd@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

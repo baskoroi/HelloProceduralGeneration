@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "EnergyCell.png",
+      "filename" : "Cell.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "EnergyCell@2x.png",
+      "filename" : "Cell@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "EnergyCell@3x.png",
+      "filename" : "Cell@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

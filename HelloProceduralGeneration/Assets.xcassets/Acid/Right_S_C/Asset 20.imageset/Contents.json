@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Asset 20.png",
+      "filename" : "MidrightAcd.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Asset 20@2x.png",
+      "filename" : "MidrightAcd@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Asset 20@3x.png",
+      "filename" : "MidrightAcd@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
