@@ -97,19 +97,22 @@ extension GameScene: MapDelegate {
         
         let acidTiles = tileSet.tileGroups.first { $0.name == "Acid" }
         let noiseMap = PerlinNoise.generateNoiseMap(columns: columns, rows: rows)
-        let topLayer = SKTileMapNode(tileSet: tileSet,
-                                     columns: columns,
-                                     rows: rows,
-                                     tileSize: mapHandler.tileSize)
-        topLayer.enableAutomapping = true
-        mapHandler.node.addChild(topLayer)
+        let acidLayer = SKTileMapNode(tileSet: tileSet,
+                                      columns: columns,
+                                      rows: rows,
+                                      tileSize: mapHandler.tileSize)
+        acidLayer.enableAutomapping = true
+        mapHandler.node.addChild(acidLayer)
         
-        let halfWidth  = CGFloat(topLayer.numberOfColumns) / 2.0 * mapHandler.tileSize.width
-        let halfHeight = CGFloat(topLayer.numberOfRows) / 2.0 * mapHandler.tileSize.height
+        let halfWidth  = CGFloat(acidLayer.numberOfColumns) / 2.0 * mapHandler.tileSize.width
+        let halfHeight = CGFloat(acidLayer.numberOfRows) / 2.0 * mapHandler.tileSize.height
+        
+        let tileSize = acidLayer.tileSize
         
         // set the tile, every column and every row
         for col in 0 ..< columns {
             for row in 0 ..< rows {
+                
                 // override boulder tiles - hence no validation
                 
                 let location = vector2(Int32(row), Int32(col))
@@ -119,73 +122,32 @@ extension GameScene: MapDelegate {
                 if terrainHeight < 0 {
                     
                     // set the tile to acid
-                    topLayer.setTileGroup(acidTiles, forColumn: col, row: row)
-                    mapHandler.tiles[col][row] = TileCategory.acid
-                    
-                    assignPhysicsBodyToTile(col: col, row: row, halfWidth: halfWidth, halfHeight: halfHeight, layer: topLayer, categoryBitMask: TileCategory.acid)
+                    acidLayer.setTileGroup(acidTiles!, forColumn: col, row: row)
                 }
             }
         }
-    }
-    
-// TODO finish this temp function: to optimize nodes# for acid tiles
-//    func activateAcidContactPhysics(layer: SKTileMapNode) {
-//
-//        let (columns, rows) = (mapHandler.columns, mapHandler.rows)
-//        // thinking time
-//        // 1. kenapa cols doang?
-//        for col in 0 ..< columns {
-//            if var firstRow = mapHandler.tiles[col].firstIndex(of: TileCategory.acid),
-//                var lastRow = mapHandler.tiles[col].lastIndex(of: TileCategory.acid) {
-//
-//                firstRow -= 1
-//                lastRow += 1
-//
-//                var rowsIndexes = [firstRow, lastRow]
-//
-//                if firstRow < 0 {
-//                    rowsIndexes.removeFirst()
-//                }
-//                if lastRow >= rows {
-//                    rowsIndexes.removeLast()
-//                }
-//
-//                for row in rowsIndexes {
-//
-//                }
-//            }
-//        }
-//    }
-    
-    private func assignPhysicsBodyToTile(col: Int, row: Int,
-                                         halfWidth: CGFloat, halfHeight: CGFloat,
-                                         layer: SKTileMapNode,
-                                         categoryBitMask: TileContent,
-                                         collisionBitMask: TileContent = 0,
-                                         contactTestBitMask: TileContent = TileCategory.player) {
-        let x = CGFloat(col) * mapHandler.tileSize.width - halfWidth //+ (tileSize.width / 2)
-        let y = CGFloat(row) * mapHandler.tileSize.height - halfHeight //+ (tileSize.height / 2)
         
-        let rect = CGRect(x: 0, y: 0,
-                          width: mapHandler.tileSize.width, height: mapHandler.tileSize.height)
-        
-        let tileNode = SKShapeNode(rect: rect)
-        tileNode.strokeColor = .yellow
-        layer.addChild(tileNode)
-        tileNode.position = CGPoint(x: x, y: y)
-        tileNode.physicsBody = SKPhysicsBody(
-            rectangleOf: mapHandler.tileSize,
-            center: CGPoint(
-                x: mapHandler.tileSize.width / 2.0,
-                y: mapHandler.tileSize.height / 2.0
-            )
-        )
-        tileNode.physicsBody?.isDynamic = false
-        tileNode.physicsBody?.allowsRotation = false
-        tileNode.physicsBody?.restitution = 0.0
-        tileNode.physicsBody?.categoryBitMask = categoryBitMask
-        tileNode.physicsBody?.collisionBitMask = collisionBitMask
-        tileNode.physicsBody?.contactTestBitMask = contactTestBitMask
+        // assign acid to mapHandler.tiles here, automapping adjacency rules
+        // makes area grow beyond actual col & row
+        for col in 0 ..< columns {
+            for row in 0 ..< rows {
+                if let tileDefinition = acidLayer.tileDefinition(atColumn: col, row: row) {
+                    mapHandler.tiles[col][row] = TileCategory.acid
+                    
+                    let tile = SKSpriteNode()
+                    
+                    let x = round(CGFloat(col) * tileSize.width - halfWidth + (tileSize.width / 2))
+                    let y = round(CGFloat(row) * tileSize.height - halfHeight + (tileSize.height / 2))
+
+                    tile.position = CGPoint(x: x, y: y)
+                    tile.size = CGSize(width: tileDefinition.size.width,
+                                       height: tileDefinition.size.height)
+                    
+                    mapHandler.acidTilePositions.append(tile.position)
+                }
+            }
+        }
+        createPhysicsBodiesOnAcid()
     }
     
     // generate tiles with even positional distribution using

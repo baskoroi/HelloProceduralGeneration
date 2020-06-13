@@ -20,11 +20,6 @@ protocol MapDelegate: class {
                                   tileToAssign: TileContent,
                                   tilesToSkip: [TileContent],
                                   enableCollision: Bool)
-    func findTileWithin5x5Cluster(for tilesToCheck: [TileContent],
-                                  column: Int,
-                                  row: Int,
-                                  maxColumnIndex: Int,
-                                  maxRowIndex: Int) -> Bool
 }
 
 class MapHandler {
@@ -41,6 +36,8 @@ class MapHandler {
     let tileSize = CGSize(width: 128, height: 128)
     let (rows, columns) = (128, 128)
     let area = CGSize(width: 128 * 128, height: 128 * 128)
+    
+    var acidTilePositions = [CGPoint]()
     
     func setup() {
         delegate?.setupMap()

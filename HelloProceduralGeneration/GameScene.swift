@@ -21,6 +21,8 @@ class GameScene: SKScene {
     var graphs = [String : GKGraph]()
     
     override func didMove(to view: SKView) {
+        physicsWorld.contactDelegate = self
+        
         mapHandler.delegate = self
         mapHandler.setup()
         
