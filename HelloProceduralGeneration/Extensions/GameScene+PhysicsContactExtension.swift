@@ -10,7 +10,8 @@ import SpriteKit
 
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
-        let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        let contactMask = contact.bodyA.categoryBitMask |
+            contact.bodyB.categoryBitMask
         
         if contactMask == TileCategory.acid | TileCategory.player {
             print("Game over")
@@ -59,35 +60,49 @@ extension GameScene: SKPhysicsContactDelegate {
             
             // if there's no more acid tiles
             if (nextIndex >= acidTilePositions.count) {
+            
                 bottomLeftCorners.append(downLeftCornerPoint)
+                
                 topRightCorners.append(CGPoint(x: tile.x + radiusWidth,
                                                y: tile.y + radiusHeight))
-            } else if acidTilePositions[nextIndex].y != (acidTilePositions[currentTileIndex].y + tileHeight) {
+            
+            } else if acidTilePositions[nextIndex].y !=
+                (acidTilePositions[currentTileIndex].y + tileHeight) {
                 
                 if let _ = topRightCorners.first(where: { corner in
+                
                     if corner == CGPoint(x: tile.x - radiusWidth,
                                          y: tile.y + radiusHeight) {
+                    
                         leftAdjacentColumnIndex = topRightCorners.firstIndex(of: corner) ?? leftAdjacentColumnIndex
                     }
                     
                     return corner == CGPoint(x: tile.x - radiusWidth,
                                              y: tile.y + radiusHeight)
+                    
                 }) {
                     
                     // rewrite / expand previous rect's top right corner to
                     // that of current column
                     if bottomLeftCorners[leftAdjacentColumnIndex].y == downLeftCornerPoint.y {
+                        
                         topRightCorners[leftAdjacentColumnIndex] = CGPoint(
                             x: tile.x + radiusWidth,
                             y: tile.y + radiusHeight
                         )
+                        
                     } else {
+                        
                         bottomLeftCorners.append(downLeftCornerPoint)
+                        
                         topRightCorners.append(CGPoint(x: tile.x + radiusWidth,
                                                        y: tile.y + radiusHeight))
+                        
                     }
                 } else {
+                    
                     bottomLeftCorners.append(downLeftCornerPoint)
+                    
                     topRightCorners.append(CGPoint(x: tile.x + radiusWidth,
                                                    y: tile.y + radiusHeight))
                 }
@@ -101,12 +116,16 @@ extension GameScene: SKPhysicsContactDelegate {
     
     private func drawAcidPhysicsBodies(bottomLeftCorners: [CGPoint],
                                        topRightCorners: [CGPoint]) {
+        
         var rectangleIndex: Int = 0
+        
         for blCorner in bottomLeftCorners {
+        
             // use difference between bottom left & top right corners to
             // determine rectangle size for physics body
             let size = CGSize(width: abs(blCorner.x - topRightCorners[rectangleIndex].x),
                               height: abs(blCorner.y - topRightCorners[rectangleIndex].y))
+            
             // for contact with acid, a physics body will be generated here
             let contactNode = SKNode()
             contactNode.physicsBody = SKPhysicsBody(rectangleOf: size)
@@ -136,18 +155,24 @@ extension GameScene: SKPhysicsContactDelegate {
                                  layer: SKTileMapNode,
                                  categoryBitMask: TileContent,
                                  collisionBitMask: TileContent = 0,
-                                 contactTestBitMask: TileContent = TileCategory.player) {
+                                 contactTestBitMask: TileContent =
+                                                     TileCategory.player) {
         
         let x = CGFloat(col) * mapHandler.tileSize.width - halfWidth
         let y = CGFloat(row) * mapHandler.tileSize.height - halfHeight
         
         let rect = CGRect(x: 0, y: 0,
-                          width: mapHandler.tileSize.width, height: mapHandler.tileSize.height)
+                          width: mapHandler.tileSize.width,
+                          height: mapHandler.tileSize.height)
         
         let tileNode = SKShapeNode(rect: rect)
-        tileNode.strokeColor = .yellow
         layer.addChild(tileNode)
+        
+        // remove default white stroke surrounding the SKShapeNode
+        tileNode.strokeColor = .clear
+        
         tileNode.position = CGPoint(x: x, y: y)
+        
         tileNode.physicsBody = SKPhysicsBody(
             rectangleOf: mapHandler.tileSize,
             center: CGPoint(

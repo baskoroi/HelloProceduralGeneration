@@ -27,6 +27,7 @@
 		CCEFD1ED249110EC0064CC60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1EC249110EC0064CC60 /* Assets.xcassets */; };
 		CCEFD1F0249110EC0064CC60 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1EE249110EC0064CC60 /* LaunchScreen.storyboard */; };
 		CCEFD1F8249119AF0064CC60 /* MainTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = CCEFD1F7249119AF0064CC60 /* MainTileSet.sks */; };
+		CCFA06542494BDA800C59BFB /* EnergyBarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCFA06532494BDA800C59BFB /* EnergyBarHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		CCEFD1EF249110EC0064CC60 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CCEFD1F1249110EC0064CC60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CCEFD1F7249119AF0064CC60 /* MainTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainTileSet.sks; sourceTree = "<group>"; };
+		CCFA06532494BDA800C59BFB /* EnergyBarHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyBarHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				CCBA8BB52493717500BC400D /* MapHandler.swift */,
 				CCBA8BBA24939F3000BC400D /* CameraHandler.swift */,
 				CC68B5F32493AFEB009F9099 /* PlayerHandler.swift */,
+				CCFA06532494BDA800C59BFB /* EnergyBarHandler.swift */,
 			);
 			path = Delegates;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 				CCBA8BB62493717500BC400D /* MapHandler.swift in Sources */,
 				CC68B5F22493ABFA009F9099 /* PerlinNoise.swift in Sources */,
 				CCCA42FE2491CEFB004232DC /* PoissonDiscSampling.swift in Sources */,
+				CCFA06542494BDA800C59BFB /* EnergyBarHandler.swift in Sources */,
 				CCBA8BB82493737900BC400D /* GameScene+MapExtension.swift in Sources */,
 				CC68B5F62493B08E009F9099 /* GameScene+PlayerExtension.swift in Sources */,
 				CCEFD1E8249110EB0064CC60 /* GameViewController.swift in Sources */,

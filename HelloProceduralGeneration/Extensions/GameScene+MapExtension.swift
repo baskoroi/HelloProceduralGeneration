@@ -76,8 +76,6 @@ extension GameScene: MapDelegate {
                                                TileCategory.brokenRobots],
                                  enableCollision: true)
         
-        scene?.size = mapHandler.area
-        
         // TODO set up scene edge physics here
     }
     
