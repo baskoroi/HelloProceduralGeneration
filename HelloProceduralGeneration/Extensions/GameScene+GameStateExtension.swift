@@ -40,6 +40,7 @@ extension GameScene: GameStateDelegate {
     }
     
     func updateTimerDisplay() {
+        guard !energyBarHandler.isDead else { return }
         guard let timerLabel = gameStateHandler.timerLabel else { return }
         let timeString = gameStateHandler.secondsElapsed.asTimeString(style: .positional)
         timerLabel.text = timeString
