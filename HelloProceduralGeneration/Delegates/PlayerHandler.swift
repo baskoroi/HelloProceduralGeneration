@@ -19,7 +19,7 @@ class PlayerHandler {
     
     weak var delegate: PlayerDelegate?
     
-    var node: SKSpriteNode?
+    var sprite: SKSpriteNode?
     var size = CGSize(width: 128, height: 128)
     
     var standingUp: SKAction?

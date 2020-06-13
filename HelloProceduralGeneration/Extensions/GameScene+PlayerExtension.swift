@@ -10,24 +10,24 @@ import SpriteKit
 
 extension GameScene: PlayerDelegate {
     func setupPlayer() {
-        playerHandler.node = SKSpriteNode(imageNamed: "PlayerFacingDown")
+        playerHandler.sprite = SKSpriteNode(imageNamed: "PlayerFacingDown")
         
-        self.addChild(playerHandler.node!)
+        self.addChild(playerHandler.sprite!)
         
-        playerHandler.node!.name = "player"
+        playerHandler.sprite!.name = "player"
         
         // place player on center of map
         // divide by 10, since zoom factor = 1/10 by default
-        playerHandler.node!.position = CGPoint(x: 128 * 128 / zoomInFactor,
+        playerHandler.sprite!.position = CGPoint(x: 128 * 128 / zoomInFactor,
                                                y: 128 * 128 / zoomInFactor)
-        playerHandler.node!.zPosition = 1
+        playerHandler.sprite!.zPosition = 1
         
         setupPlayerPhysicsBody()
         setupPlayerAnimations()
     }
 
     func setupPlayerPhysicsBody() {
-        guard let player = playerHandler.node else { return }
+        guard let player = playerHandler.sprite else { return }
         
         player.physicsBody = SKPhysicsBody(
             rectangleOf: CGSize(width: playerHandler.size.width,
@@ -48,19 +48,19 @@ extension GameScene: PlayerDelegate {
     func setupPlayerAnimations() {
         // only standing
         playerHandler.standingUp = SKAction.run {
-            self.playerHandler.node?.texture =
+            self.playerHandler.sprite?.texture =
                 PlayerAnimations.Textures.Standing.up
         }
         playerHandler.standingDown = SKAction.run {
-            self.playerHandler.node?.texture =
+            self.playerHandler.sprite?.texture =
                 PlayerAnimations.Textures.Standing.down
         }
         playerHandler.standingLeft = SKAction.run {
-            self.playerHandler.node?.texture =
+            self.playerHandler.sprite?.texture =
                 PlayerAnimations.Textures.Standing.left
         }
         playerHandler.standingRight = SKAction.run {
-            self.playerHandler.node?.texture =
+            self.playerHandler.sprite?.texture =
                 PlayerAnimations.Textures.Standing.right
         }
         
@@ -89,7 +89,7 @@ extension GameScene: PlayerDelegate {
     }
     
     func movePlayer(to location: CGPoint) {
-        guard let player        = playerHandler.node
+        guard let player        = playerHandler.sprite
             , let runningUp     = playerHandler.runningUp
             , let runningDown   = playerHandler.runningDown
             , let runningLeft   = playerHandler.runningLeft

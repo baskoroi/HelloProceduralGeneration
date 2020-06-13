@@ -14,6 +14,7 @@ class GameScene: SKScene {
     var mapHandler = MapHandler()
     var cameraHandler = CameraHandler(zoomInFactor: 14)
     var playerHandler = PlayerHandler()
+    var energyBarHandler = EnergyBarHandler()
     
     let zoomInFactor: CGFloat = 14
     
@@ -31,6 +32,9 @@ class GameScene: SKScene {
         
         playerHandler.delegate = self
         playerHandler.setup()
+        
+        energyBarHandler.delegate = self
+        energyBarHandler.setup()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -53,7 +57,7 @@ class GameScene: SKScene {
     }
     
     func standPlayerStill() {
-        guard let player = playerHandler.node
+        guard let player = playerHandler.sprite
             , let idleAfterMoveAction = playerHandler.idleAfterMoveAction else { return }
         player.removeAction(forKey: PlayerAnimations.ActionKeys.moving.rawValue)
         player.run(idleAfterMoveAction, withKey: PlayerAnimations.ActionKeys.standing.rawValue)
@@ -61,7 +65,7 @@ class GameScene: SKScene {
 
     override func update(_ currentTime: TimeInterval) {
         super.update(currentTime)
-        if let camera = cameraHandler.node, let player = playerHandler.node {
+        if let camera = cameraHandler.node, let player = playerHandler.sprite {
             camera.position = player.position
         }
     }

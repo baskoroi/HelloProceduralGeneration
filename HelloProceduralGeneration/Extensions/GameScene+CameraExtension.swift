@@ -20,22 +20,5 @@ extension GameScene: CameraDelegate {
         guard let cameraNode = cameraHandler.node else { return }
         self.addChild(cameraNode)
         self.camera = cameraNode
-
-        setupHUD()
-    }
-    
-    func setupHUD() {
-        guard let cameraNode = cameraHandler.node else { return }
-        
-        let (width, height, scale) = (ScreenHelper.width,
-                                      ScreenHelper.height,
-                                      ScreenHelper.scale)
-        
-        print(width, height)
-        let energyBar = SKSpriteNode(imageNamed: "energy10")
-        cameraNode.addChild(energyBar)
-        energyBar.zPosition = 5
-        energyBar.setScale(1.75)
-        energyBar.position = CGPoint(x: -width / 2 + 112, y: height / 2 + 72)
     }
 }

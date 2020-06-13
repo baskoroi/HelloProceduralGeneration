@@ -14,7 +14,7 @@ extension GameScene: SKPhysicsContactDelegate {
             contact.bodyB.categoryBitMask
         
         if contactMask == TileCategory.acid | TileCategory.player {
-            print("Game over")
+            energyBarHandler.delegate?.kill()
         }
     }
     
