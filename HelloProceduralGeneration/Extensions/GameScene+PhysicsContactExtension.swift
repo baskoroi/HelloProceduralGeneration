@@ -18,7 +18,6 @@ extension GameScene: SKPhysicsContactDelegate {
     }
     
     func createPhysicsBodiesOnAcid() {
-        
         let (bottomLeftCorners, topRightCorners) = determineTileCorners()
         
         drawAcidPhysicsBodies(bottomLeftCorners: bottomLeftCorners,
@@ -139,8 +138,8 @@ extension GameScene: SKPhysicsContactDelegate {
                                  collisionBitMask: TileContent = 0,
                                  contactTestBitMask: TileContent = TileCategory.player) {
         
-        let x = CGFloat(col) * mapHandler.tileSize.width - halfWidth //+ (tileSize.width / 2)
-        let y = CGFloat(row) * mapHandler.tileSize.height - halfHeight //+ (tileSize.height / 2)
+        let x = CGFloat(col) * mapHandler.tileSize.width - halfWidth
+        let y = CGFloat(row) * mapHandler.tileSize.height - halfHeight
         
         let rect = CGRect(x: 0, y: 0,
                           width: mapHandler.tileSize.width, height: mapHandler.tileSize.height)
