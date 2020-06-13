@@ -18,6 +18,10 @@ extension GameScene: SKPhysicsContactDelegate {
         }
     }
     
+    // use line sweep algorithm (i.e. with bottom-left & top-right
+    // corner coordinates) to create physics bodies on acid
+    // credits & reference:
+    // https://stackoverflow.com/questions/47645039/connect-physicsbodies-on-tilemap-in-spritekit
     func createPhysicsBodiesOnAcid() {
         let (bottomLeftCorners, topRightCorners) = determineTileCorners()
         
@@ -25,8 +29,6 @@ extension GameScene: SKPhysicsContactDelegate {
                               topRightCorners: topRightCorners)
     }
     
-    // use line sweep algorithm (i.e. with bottom-left & top-right
-    // corner coordinates) to create physics bodies on acid
     private func determineTileCorners() -> (bottomLeftCorners: [CGPoint],
                                             topRightCorners: [CGPoint]) {
         

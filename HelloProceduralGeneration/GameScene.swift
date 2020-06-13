@@ -15,6 +15,7 @@ class GameScene: SKScene {
     var cameraHandler = CameraHandler(zoomInFactor: 14)
     var playerHandler = PlayerHandler()
     var energyBarHandler = EnergyBarHandler()
+    var gameStateHandler = GameStateHandler()
     
     let zoomInFactor: CGFloat = 14
     
@@ -35,6 +36,9 @@ class GameScene: SKScene {
         
         energyBarHandler.delegate = self
         energyBarHandler.setup()
+        
+        gameStateHandler.delegate = self
+        gameStateHandler.setup()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

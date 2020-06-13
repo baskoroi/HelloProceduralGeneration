@@ -10,7 +10,7 @@ import SpriteKit
 
 extension GameScene: PlayerDelegate {
     func setupPlayer() {
-        playerHandler.sprite = SKSpriteNode(imageNamed: "PlayerFacingDown")
+        playerHandler.sprite = SKSpriteNode(imageNamed: "PlayerStandingDown")
         
         self.addChild(playerHandler.sprite!)
         

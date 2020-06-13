@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC1B17DE249517DE00A8D429 /* GameStateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1B17DD249517DE00A8D429 /* GameStateHandler.swift */; };
+		CC1B17E0249518B100A8D429 /* GameScene+GameStateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1B17DF249518B100A8D429 /* GameScene+GameStateExtension.swift */; };
 		CC68B5F22493ABFA009F9099 /* PerlinNoise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC68B5F12493ABFA009F9099 /* PerlinNoise.swift */; };
 		CC68B5F42493AFEB009F9099 /* PlayerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC68B5F32493AFEB009F9099 /* PlayerHandler.swift */; };
 		CC68B5F62493B08E009F9099 /* GameScene+PlayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC68B5F52493B08E009F9099 /* GameScene+PlayerExtension.swift */; };
@@ -32,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CC1B17DD249517DE00A8D429 /* GameStateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStateHandler.swift; sourceTree = "<group>"; };
+		CC1B17DF249518B100A8D429 /* GameScene+GameStateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+GameStateExtension.swift"; sourceTree = "<group>"; };
 		CC68B5F12493ABFA009F9099 /* PerlinNoise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerlinNoise.swift; sourceTree = "<group>"; };
 		CC68B5F32493AFEB009F9099 /* PlayerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerHandler.swift; sourceTree = "<group>"; };
 		CC68B5F52493B08E009F9099 /* GameScene+PlayerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+PlayerExtension.swift"; sourceTree = "<group>"; };
@@ -85,6 +89,7 @@
 				CCBA8BBA24939F3000BC400D /* CameraHandler.swift */,
 				CC68B5F32493AFEB009F9099 /* PlayerHandler.swift */,
 				CCFA06532494BDA800C59BFB /* EnergyBarHandler.swift */,
+				CC1B17DD249517DE00A8D429 /* GameStateHandler.swift */,
 			);
 			path = Delegates;
 			sourceTree = "<group>";
@@ -97,6 +102,7 @@
 				CC68B5F52493B08E009F9099 /* GameScene+PlayerExtension.swift */,
 				CC68B5F72493C089009F9099 /* GameScene+PhysicsContactExtension.swift */,
 				CCFA06552494D42600C59BFB /* GameScene+EnergyBarExtension.swift */,
+				CC1B17DF249518B100A8D429 /* GameScene+GameStateExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -225,12 +231,14 @@
 				CC68B5F42493AFEB009F9099 /* PlayerHandler.swift in Sources */,
 				CCBA8BB32493705800BC400D /* TileCategory.swift in Sources */,
 				CC8C7B2324927F3700F55A85 /* PlayerAnimations.swift in Sources */,
+				CC1B17E0249518B100A8D429 /* GameScene+GameStateExtension.swift in Sources */,
 				CCBA8BBD2493A01800BC400D /* GameScene+CameraExtension.swift in Sources */,
 				CC68B5F82493C089009F9099 /* GameScene+PhysicsContactExtension.swift in Sources */,
 				CCBA8BB62493717500BC400D /* MapHandler.swift in Sources */,
 				CC68B5F22493ABFA009F9099 /* PerlinNoise.swift in Sources */,
 				CCCA42FE2491CEFB004232DC /* PoissonDiscSampling.swift in Sources */,
 				CCFA06542494BDA800C59BFB /* EnergyBarHandler.swift in Sources */,
+				CC1B17DE249517DE00A8D429 /* GameStateHandler.swift in Sources */,
 				CCBA8BB82493737900BC400D /* GameScene+MapExtension.swift in Sources */,
 				CC68B5F62493B08E009F9099 /* GameScene+PlayerExtension.swift in Sources */,
 				CCFA06562494D42600C59BFB /* GameScene+EnergyBarExtension.swift in Sources */,

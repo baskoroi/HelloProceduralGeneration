@@ -49,7 +49,7 @@ extension GameScene: EnergyBarDelegate {
         energyBarHandler.batteryLevel = 0
     }
     
-    func updateOnHUD() {
+    func updateEnergyDisplay() {
         guard let energySprite = energyBarHandler.sprite else { return }
         let level = energyBarHandler.batteryLevel
         energySprite.texture = SKTexture(imageNamed: "energy\(level)")

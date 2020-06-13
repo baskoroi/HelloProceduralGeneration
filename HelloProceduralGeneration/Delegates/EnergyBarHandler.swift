@@ -13,7 +13,7 @@ protocol EnergyBarDelegate: class {
     func recharge(by levels: Int)
     func discharge(by levels: Int)
     func kill()
-    func updateOnHUD()
+    func updateEnergyDisplay()
 }
 
 class EnergyBarHandler {
@@ -22,7 +22,7 @@ class EnergyBarHandler {
     var batteryLevel: Int = 10 {
         didSet {
             // update battery level on HUD, as it drops or gets recharged
-            self.delegate?.updateOnHUD()
+            self.delegate?.updateEnergyDisplay()
             
             if batteryLevel < 4 {
                 dischargeDuration = 20
