@@ -21,13 +21,17 @@ class PlayerHandler {
     
     var node: SKSpriteNode?
     var size = CGSize(width: 128, height: 128)
-    var facingDown: SKAction? // for both running + standing
+    
     var standingUp: SKAction?
     var standingLeft: SKAction?
     var standingRight: SKAction?
+    var standingDown: SKAction?
+    
     var runningUp: SKAction?
     var runningLeft: SKAction?
     var runningRight: SKAction?
+    var runningDown: SKAction?
+    
     var idleAfterMoveAction: SKAction?
     
     func setup() {

@@ -46,51 +46,58 @@ extension GameScene: PlayerDelegate {
     }
 
     func setupPlayerAnimations() {
-        // both standing & running
-        playerHandler.facingDown = SKAction.run {
-            self.playerHandler.node?.texture = PlayerAnimations.playerFacingDownTexture
-        }
-        
         // only standing
         playerHandler.standingUp = SKAction.run {
-            self.playerHandler.node?.texture = PlayerAnimations.playerStandingUpTexture
+            self.playerHandler.node?.texture =
+                PlayerAnimations.Textures.Standing.up
+        }
+        playerHandler.standingDown = SKAction.run {
+            self.playerHandler.node?.texture =
+                PlayerAnimations.Textures.Standing.down
         }
         playerHandler.standingLeft = SKAction.run {
-            self.playerHandler.node?.texture = PlayerAnimations.playerStandingLeftTexture
+            self.playerHandler.node?.texture =
+                PlayerAnimations.Textures.Standing.left
         }
         playerHandler.standingRight = SKAction.run {
-            self.playerHandler.node?.texture = PlayerAnimations.playerStandingRightTexture
+            self.playerHandler.node?.texture =
+                PlayerAnimations.Textures.Standing.right
         }
         
         // only running
         playerHandler.runningUp = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.playerRunningUpTextures,
+            SKAction.animate(with: PlayerAnimations.Textures.Running.up,
                              timePerFrame: 0.1)
         )
         playerHandler.runningLeft = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.playerRunningLeftTextures,
+            SKAction.animate(with: PlayerAnimations.Textures.Running.left,
                              timePerFrame: 0.1)
         )
         playerHandler.runningRight = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.playerRunningRightTextures,
+            SKAction.animate(with: PlayerAnimations.Textures.Running.right,
+                             timePerFrame: 0.1)
+        )
+        playerHandler.runningDown = SKAction.repeatForever(
+            SKAction.animate(with: PlayerAnimations.Textures.Running.down,
                              timePerFrame: 0.1)
         )
         
         // by default, set player's idle animation to facing down
         // it doesn't have any movement speed in the start
-        playerHandler.idleAfterMoveAction = playerHandler.facingDown
+        playerHandler.idleAfterMoveAction = playerHandler.standingDown
         standPlayerStill()
     }
     
     func movePlayer(to location: CGPoint) {
         guard let player        = playerHandler.node
-            , let runningRight  = playerHandler.runningRight
             , let runningUp     = playerHandler.runningUp
+            , let runningDown   = playerHandler.runningDown
             , let runningLeft   = playerHandler.runningLeft
-            , let standingRight = playerHandler.standingRight
+            , let runningRight  = playerHandler.runningRight
             , let standingUp    = playerHandler.standingUp
+            , let standingDown  = playerHandler.standingDown
             , let standingLeft  = playerHandler.standingLeft
-            , let facingDown    = playerHandler.facingDown
+            , let standingRight = playerHandler.standingRight
             , playerHandler.idleAfterMoveAction != nil else { return }
         
         let movingActionKey = PlayerAnimations.ActionKeys.moving.rawValue
@@ -102,7 +109,7 @@ extension GameScene: PlayerDelegate {
         let dy = location.y - player.position.y
         
         let angle = atan2(dy, dx)
-        let quarterRadian = CGFloat.pi / 4
+        let radian = CGFloat.pi // 1 rad = 180°
         
         let speed: CGFloat = 540 // move 500 screen points every second
         
@@ -112,22 +119,22 @@ extension GameScene: PlayerDelegate {
         // due to the visual nature of the game, only 4-way controls are allowed
         // player needs to hold screen in order to keep moving
         switch angle {
-        case (-quarterRadian) ..< quarterRadian: // right
+        case (-radian / 4) ..< radian / 4: // right
             animatePlayerAction = runningRight
             playerHandler.idleAfterMoveAction = standingRight
             
             movePlayerAction = SKAction.repeatForever(
                 SKAction.moveBy(x: speed, y: 0, duration: 1))
             
-        case quarterRadian ..< 3 * quarterRadian: // up
+        case radian / 4 ..< 3 * radian / 4: // up
             animatePlayerAction = runningUp
             playerHandler.idleAfterMoveAction = standingUp
             
             movePlayerAction = SKAction.repeatForever(
                 SKAction.moveBy(x: 0, y: speed, duration: 1))
             
-        case 3 * quarterRadian ..< CGFloat.pi,
-             -CGFloat.pi ..< -3 * quarterRadian: // left
+        case 3 * radian / 4 ..< CGFloat.pi,
+             -CGFloat.pi ..< -3 * radian / 4: // left
             animatePlayerAction = runningLeft
             playerHandler.idleAfterMoveAction = standingLeft
             
@@ -135,8 +142,8 @@ extension GameScene: PlayerDelegate {
                 SKAction.moveBy(x: -speed, y: 0, duration: 1))
             
         default: // down
-            animatePlayerAction = facingDown
-            playerHandler.idleAfterMoveAction = facingDown
+            animatePlayerAction = runningDown
+            playerHandler.idleAfterMoveAction = standingDown
             
             movePlayerAction = SKAction.repeatForever(
                 SKAction.moveBy(x: 0, y: -speed, duration: 1))
