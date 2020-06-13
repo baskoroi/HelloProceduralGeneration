@@ -33,6 +33,9 @@ class EnergyBarHandler {
     }
     var minimumLevel: Int = 0
     var maximumLevel: Int = 10
+    var isDead: Bool {
+        batteryLevel == minimumLevel
+    }
     
     var sprite: SKSpriteNode?
     var dischargeDuration: Int = 30

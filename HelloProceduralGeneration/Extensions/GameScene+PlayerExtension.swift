@@ -89,6 +89,11 @@ extension GameScene: PlayerDelegate {
     }
     
     func movePlayer(to location: CGPoint) {
+        guard !energyBarHandler.isDead else {
+            playerHandler.sprite?.removeAllActions()
+            return
+        }
+        
         guard let player        = playerHandler.sprite
             , let runningUp     = playerHandler.runningUp
             , let runningDown   = playerHandler.runningDown
