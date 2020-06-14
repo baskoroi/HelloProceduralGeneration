@@ -16,7 +16,7 @@ extension GameScene: SKPhysicsContactDelegate {
         
         if contactMask == TileCategory.acid | TileCategory.player {
             run(SKAction.sequence([
-                SKAction.wait(forDuration: 0.15),
+                SKAction.wait(forDuration: 0.25),
                 SKAction.run { [weak playerHandler, weak energyBarHandler] in
                     playerHandler?.delegate?.standPlayerStill()
                     energyBarHandler?.delegate?.kill()
