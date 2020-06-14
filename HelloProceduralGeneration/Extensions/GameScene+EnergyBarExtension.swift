@@ -13,6 +13,9 @@ extension GameScene: EnergyBarDelegate {
     func setupEnergyBar() {
         guard let cameraNode = cameraHandler.node else { return }
         
+        // reset energy levels
+        energyBarHandler.delegate?.recharge(by: energyBarHandler.maximumLevel)
+        
         let (width, height) = (ScreenHelper.width, ScreenHelper.height)
         
         let energyBarNode = SKSpriteNode(imageNamed: "energy10")

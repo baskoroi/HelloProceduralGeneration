@@ -11,17 +11,16 @@ import SpriteKit
 extension GameScene: PlayerDelegate {
     func setupPlayer() {
         playerHandler.sprite = SKSpriteNode(imageNamed: "PlayerStandingDown")
+        guard let player = playerHandler.sprite else { return }
         
-        self.addChild(playerHandler.sprite!)
+        self.addChild(player)
         
-        playerHandler.sprite!.name = "player"
+        player.name = "player"
         
         // place player on center of map
         // divide by 10, since zoom factor = 1/10 by default
-//        playerHandler.sprite!.position = CGPoint(x: 128 * 128 / zoomInFactor,
-//                                               y: 128 * 128 / zoomInFactor)
-        playerHandler.sprite!.position = CGPoint(x: 0, y: 0)
-        playerHandler.sprite!.zPosition = 1
+        player.position = CGPoint(x: 0, y: 0)
+        player.zPosition = 1
         
         setupPlayerPhysicsBody()
         setupPlayerAnimations()

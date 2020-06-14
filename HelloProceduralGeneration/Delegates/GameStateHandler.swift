@@ -8,10 +8,25 @@
 
 import SpriteKit
 
+enum GameState {
+    case menu
+    case playing
+    case won
+    case lost
+}
+
 protocol GameStateDelegate: class {
     func setupGameState()
+    
+    // pause UI
+    func pause()
+    func resume()
+    func restart()
+    
+    // end game states
     func lose()
     func win()
+    
     func updateTimerDisplay()
 }
 
@@ -21,7 +36,7 @@ class GameStateHandler {
             self.delegate?.updateTimerDisplay()
         }
     }
-    var isWon = false
+    var currentState: GameState = .playing
     var timerLabel: SKLabelNode?
     
     weak var delegate: GameStateDelegate?

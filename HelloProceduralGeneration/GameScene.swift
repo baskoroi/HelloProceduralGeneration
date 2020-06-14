@@ -23,7 +23,12 @@ class GameScene: SKScene {
     var graphs = [String : GKGraph]()
     
     override func didMove(to view: SKView) {
+        setupNewGame()
+    }
+    
+    func setupNewGame() {
         physicsWorld.contactDelegate = self
+        physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         
         mapHandler.delegate = self
         mapHandler.setup()
