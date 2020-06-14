@@ -36,20 +36,32 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         showGameOver()
     }
     
+    private func showBlackOverlay(on camera: SKCameraNode,
+                                  width: CGFloat,
+                                  height: CGFloat) -> SKSpriteNode {
+        
+        let overlay = SKSpriteNode(
+            color: UIColor(white: 0, alpha: 0.4),
+            size: CGSize(width: width, height: height))
+        overlay.zPosition = 10
+        camera.addChild(overlay)
+        
+        return overlay
+    }
+    
     private func showGameOver() {
         
         guard let camera = cameraHandler.node else { return }
         
-        let (screenWidth, screenHeight, screenScale) =
-            (UIScreen.main.nativeBounds.width,
-             UIScreen.main.nativeBounds.height,
-             UIScreen.main.nativeScale)
+        let (screenWidth, screenHeight, screenScale) = (
+            UIScreen.main.nativeBounds.width,
+            UIScreen.main.nativeBounds.height,
+            UIScreen.main.nativeScale
+        )
         
-        let gameOverScreen = SKSpriteNode(
-            color: UIColor(white: 0, alpha: 0.4),
-            size: CGSize(width: screenWidth, height: screenHeight))
-        gameOverScreen.zPosition = 10
-        camera.addChild(gameOverScreen)
+        let gameOverScreen = showBlackOverlay(on: camera,
+                                              width: screenWidth,
+                                              height: screenHeight)
         
         let title = SKLabelNode()
         title.text = "GAME OVER"
