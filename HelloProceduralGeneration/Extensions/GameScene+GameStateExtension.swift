@@ -102,7 +102,6 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         self.removeAllActions()
         
         let newGame = GameScene(size: self.size)
-        let transition = SKTransition.fade(withDuration: 1.0)
         newGame.scaleMode = .aspectFill
         view.presentScene(newGame)
     }
@@ -119,7 +118,6 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         case "exit":
             print("Exiting the game...")
         case "restart":
-            print("Restarting the game...")
             restart()
         default:
             break
