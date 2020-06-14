@@ -45,7 +45,7 @@ class GameScene: SKScene {
         guard let touch = touches.first else { return }
         
         let destination = touch.location(in: self)
-        movePlayer(to: destination)
+        playerHandler.delegate?.movePlayer(to: destination)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -53,7 +53,7 @@ class GameScene: SKScene {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        standPlayerStill()
+        playerHandler.delegate?.standPlayerStill()
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -64,7 +64,6 @@ class GameScene: SKScene {
         super.update(currentTime)
         if let camera = cameraHandler.node, let player = playerHandler.sprite {
             camera.position = player.position
-            print(player.position)
         }
     }
 }
