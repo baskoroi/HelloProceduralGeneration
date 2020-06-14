@@ -86,8 +86,8 @@
 			isa = PBXGroup;
 			children = (
 				CCBA8BB52493717500BC400D /* MapHandler.swift */,
-				CCBA8BBA24939F3000BC400D /* CameraHandler.swift */,
 				CC68B5F32493AFEB009F9099 /* PlayerHandler.swift */,
+				CCBA8BBA24939F3000BC400D /* CameraHandler.swift */,
 				CCFA06532494BDA800C59BFB /* EnergyBarHandler.swift */,
 				CC1B17DD249517DE00A8D429 /* GameStateHandler.swift */,
 			);
@@ -98,8 +98,8 @@
 			isa = PBXGroup;
 			children = (
 				CCBA8BB72493737900BC400D /* GameScene+MapExtension.swift */,
-				CCBA8BBC2493A01800BC400D /* GameScene+CameraExtension.swift */,
 				CC68B5F52493B08E009F9099 /* GameScene+PlayerExtension.swift */,
+				CCBA8BBC2493A01800BC400D /* GameScene+CameraExtension.swift */,
 				CC68B5F72493C089009F9099 /* GameScene+PhysicsContactExtension.swift */,
 				CCFA06552494D42600C59BFB /* GameScene+EnergyBarExtension.swift */,
 				CC1B17DF249518B100A8D429 /* GameScene+GameStateExtension.swift */,

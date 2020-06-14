@@ -18,8 +18,9 @@ extension GameScene: PlayerDelegate {
         
         // place player on center of map
         // divide by 10, since zoom factor = 1/10 by default
-        playerHandler.sprite!.position = CGPoint(x: 128 * 128 / zoomInFactor,
-                                               y: 128 * 128 / zoomInFactor)
+//        playerHandler.sprite!.position = CGPoint(x: 128 * 128 / zoomInFactor,
+//                                               y: 128 * 128 / zoomInFactor)
+        playerHandler.sprite!.position = CGPoint(x: 0, y: 0)
         playerHandler.sprite!.zPosition = 1
         
         setupPlayerPhysicsBody()
@@ -86,6 +87,13 @@ extension GameScene: PlayerDelegate {
         // it doesn't have any movement speed in the start
         playerHandler.idleAfterMoveAction = playerHandler.standingDown
         standPlayerStill()
+    }
+    
+    func standPlayerStill() {
+        guard let player = playerHandler.sprite
+            , let idleAfterMoveAction = playerHandler.idleAfterMoveAction else { return }
+        player.removeAction(forKey: PlayerAnimations.ActionKeys.moving.rawValue)
+        player.run(idleAfterMoveAction, withKey: PlayerAnimations.ActionKeys.standing.rawValue)
     }
     
     func movePlayer(to location: CGPoint) {
@@ -156,6 +164,10 @@ extension GameScene: PlayerDelegate {
 
         let moveActionGroup = SKAction.group([movePlayerAction, animatePlayerAction])
         player.run(moveActionGroup, withKey: movingActionKey)
+    }
+    
+    func stopAllPlayerActions() {
+        playerHandler.sprite?.removeAllActions()
     }
 
 }

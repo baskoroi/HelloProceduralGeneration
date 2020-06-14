@@ -28,11 +28,11 @@ class GameScene: SKScene {
         mapHandler.delegate = self
         mapHandler.setup()
         
-        cameraHandler.delegate = self
-        cameraHandler.setup()
-        
         playerHandler.delegate = self
         playerHandler.setup()
+        
+        cameraHandler.delegate = self
+        cameraHandler.setup()
         
         energyBarHandler.delegate = self
         energyBarHandler.setup()
@@ -59,18 +59,12 @@ class GameScene: SKScene {
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         
     }
-    
-    func standPlayerStill() {
-        guard let player = playerHandler.sprite
-            , let idleAfterMoveAction = playerHandler.idleAfterMoveAction else { return }
-        player.removeAction(forKey: PlayerAnimations.ActionKeys.moving.rawValue)
-        player.run(idleAfterMoveAction, withKey: PlayerAnimations.ActionKeys.standing.rawValue)
-    }
 
     override func update(_ currentTime: TimeInterval) {
         super.update(currentTime)
         if let camera = cameraHandler.node, let player = playerHandler.sprite {
             camera.position = player.position
+            print(player.position)
         }
     }
 }

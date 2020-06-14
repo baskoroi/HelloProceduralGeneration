@@ -13,6 +13,7 @@ protocol PlayerDelegate: class {
     func setupPlayerPhysicsBody()
     func setupPlayerAnimations()
     func movePlayer(to location: CGPoint)
+    func standPlayerStill()
 }
 
 class PlayerHandler {

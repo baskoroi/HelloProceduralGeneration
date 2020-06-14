@@ -15,7 +15,14 @@ extension GameScene: SKPhysicsContactDelegate {
             contact.bodyB.categoryBitMask
         
         if contactMask == TileCategory.acid | TileCategory.player {
-            energyBarHandler.delegate?.kill()
+            run(SKAction.sequence([
+                SKAction.wait(forDuration: 0.15),
+                SKAction.run { [weak playerHandler, weak energyBarHandler] in
+                    playerHandler?.delegate?.standPlayerStill()
+                    energyBarHandler?.delegate?.kill()
+                }
+            ]))
+            
         } else if contactMask == TileCategory.energyCell | TileCategory.player {
             updateTileForTakenEnergyCell(at: contact)
             energyBarHandler.delegate?.recharge(by: 1)
