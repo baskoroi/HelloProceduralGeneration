@@ -10,11 +10,34 @@ import SpriteKit
 
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
+        
         let contactMask = contact.bodyA.categoryBitMask |
             contact.bodyB.categoryBitMask
         
         if contactMask == TileCategory.acid | TileCategory.player {
             energyBarHandler.delegate?.kill()
+        } else if contactMask == TileCategory.energyCell | TileCategory.player {
+            updateTileForTakenEnergyCell(at: contact)
+            energyBarHandler.delegate?.recharge(by: 1)
+        }
+    }
+    
+    private func updateTileForTakenEnergyCell(at contact: SKPhysicsContact) {
+        guard let playerSprite = playerHandler.sprite else { return }
+        guard let itemsLayer = mapHandler.itemsLayer else { return }
+        guard let nodeA = contact.bodyA.node else { return }
+        guard let nodeB = contact.bodyB.node else { return }
+        
+        let energyCell = nodeA == playerSprite ? nodeB : nodeA
+        let position = energyCell.position
+        if let row = mapHandler.itemsLayer?
+            .tileRowIndex(fromPosition: position),
+            let col = mapHandler.itemsLayer?
+            .tileColumnIndex(fromPosition: position),
+            let groundTile = mapHandler.tileSet?.tileGroups.first(where: {
+                    $0.name == "Energy Cell Taken"
+            }) {
+            itemsLayer.setTileGroup(groundTile, forColumn: col, row: row)
         }
     }
     

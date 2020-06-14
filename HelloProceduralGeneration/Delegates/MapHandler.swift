@@ -38,6 +38,8 @@ class MapHandler {
     let area = CGSize(width: 128 * 128, height: 128 * 128)
     
     var acidTilePositions = [CGPoint]()
+    var itemsLayer: SKTileMapNode?
+    var tileSet: SKTileSet?
     
     func setup() {
         delegate?.setupMap()

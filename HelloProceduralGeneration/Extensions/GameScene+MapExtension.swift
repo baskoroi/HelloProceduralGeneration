@@ -15,7 +15,8 @@ extension GameScene: MapDelegate {
         addChild(mapHandler.node)
         
         // retrieve tile sets from corresponding .sks files
-        let tileSet = SKTileSet(named: "Proxima Tile Set")!
+        mapHandler.tileSet = SKTileSet(named: "Proxima Tile Set")
+        guard let tileSet = mapHandler.tileSet else { return }
         
         // MARK: fill all tiles with land tiles, by default
         setupLandTiles(tileSet: tileSet)
@@ -33,6 +34,7 @@ extension GameScene: MapDelegate {
                                        tileSize: mapHandler.tileSize)
         itemsLayer.enableAutomapping = true
         mapHandler.node.addChild(itemsLayer)
+        mapHandler.itemsLayer = itemsLayer
         
         // MARK: generate boulders around land (w/ Poisson Disc Sampling)
         distributeTilesAroundMap(radius: 4,
@@ -186,6 +188,8 @@ extension GameScene: MapDelegate {
             
             if enableCollision {
                 assignPhysicsBodyToTile(col: col, row: row, halfWidth: halfWidth, halfHeight: halfHeight, layer: layer, categoryBitMask: tileToAssign, collisionBitMask: TileCategory.player)
+            } else {
+                assignPhysicsBodyToTile(col: col, row: row, halfWidth: halfWidth, halfHeight: halfHeight, layer: layer, categoryBitMask: tileToAssign, collisionBitMask: 0, contactTestBitMask: TileCategory.player)
             }
         }
     }
