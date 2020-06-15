@@ -23,15 +23,13 @@ protocol EnergyBarDelegate: class {
 class EnergyBarHandler {
     
     // 10: full -> 0: empty
-    var batteryLevel: Int = 10 {
+    var batteryLevel: Int = 7 {
         didSet {
             // update battery level on HUD, as it drops or gets recharged
             self.delegate?.updateEnergyDisplay()
             
-            if batteryLevel < 4 {
-                dischargeDuration = 20
-            } else if batteryLevel < 8 {
-                dischargeDuration = 25
+            if batteryLevel <= 4 {
+                dischargeDuration = 50
             }
         }
     }
@@ -42,7 +40,7 @@ class EnergyBarHandler {
     }
     
     var sprite: SKSpriteNode?
-    var dischargeDuration: Int = 30
+    var dischargeDuration: Int = 45
     
     weak var delegate: EnergyBarDelegate?
     

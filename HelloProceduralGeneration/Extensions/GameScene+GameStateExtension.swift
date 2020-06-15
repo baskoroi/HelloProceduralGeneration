@@ -169,14 +169,14 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         let pauseScreen = showOverlay(on: camera,
                                       width: screenWidth,
                                       height: screenHeight,
-                                      isWhite: true,
-                                      alpha: 0.8,
+                                      isWhite: false,
+                                      alpha: 1,
                                       overlayNodeName: "pauseScreen")
         
         // back button : "chevron.left" here
         let backButton = SpriteButton(uiImageSystemName: "chevron.left",
                                       buttonName: "pauseBack",
-                                      tintColor: .black,
+                                      tintColor: .white,
                                       size: CGSize(width: 50, height: 64))
         backButton.delegate = self
         backButton.position = CGPoint(x: -220, y: 514)
@@ -186,8 +186,8 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         let mainMenuButton = LabelButton(
             text: "M A I N   M E N U",
             buttonName: "pauseMainMenu",
-            fontSize: 54,
-            fontColor: .black)
+            fontSize: 40,
+            fontColor: .white)
         
         mainMenuButton.delegate = self
         mainMenuButton.position = CGPoint(x: 0, y: 64)
@@ -196,8 +196,8 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         let restartButton = LabelButton(
             text: "R E S T A R T",
             buttonName: "pauseRestart",
-            fontSize: 54,
-            fontColor: .black)
+            fontSize: 40,
+            fontColor: .white)
         
         restartButton.delegate = self
         restartButton.position = CGPoint(x: 0, y: -64)
