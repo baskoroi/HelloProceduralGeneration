@@ -11,8 +11,31 @@ import SpriteKit
 extension GameScene: GameStateDelegate, ButtonDelegate {
     
     func setupGameState() {
-        guard let energySprite = energyBarHandler.sprite else { return }
+        // game state is already reset to playing, as per
+        // GameStateHandler() init
         
+        setupGameTimerDisplay()
+        setupPauseButton()
+        
+        startTimer()
+    }
+    
+    func startTimer() {
+        let countTimeAction = SKAction.repeatForever(SKAction.sequence([
+            SKAction.wait(forDuration: 1),
+            SKAction.run { [weak self] in
+                self?.gameStateHandler.secondsElapsed += 1
+            }
+        ]))
+        run(countTimeAction, withKey: "countTimer")
+    }
+    
+    func pauseTimer() {
+        removeAction(forKey: "countTimer")
+    }
+    
+    func setupGameTimerDisplay() {
+        guard let energySprite = energyBarHandler.sprite else { return }
         let timerLabel = SKLabelNode()
         timerLabel.text = "00:00"
         timerLabel.fontSize = 12
@@ -20,14 +43,17 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         timerLabel.position = CGPoint(x: -36, y: 10)
         gameStateHandler.timerLabel = timerLabel
         energySprite.addChild(timerLabel)
+    }
+    
+    func setupPauseButton() {
+        guard let camera = cameraHandler.node else { return }
         
-        let countTimeAction = SKAction.repeatForever(SKAction.sequence([
-            SKAction.wait(forDuration: 1),
-            SKAction.run { [weak self] in
-                self?.gameStateHandler.secondsElapsed += 1
-            }
-        ]))
-        run(countTimeAction)
+        let pauseButton = SpriteButton(imageName: "pause", buttonName: "pause")
+        pauseButton.delegate = self
+        pauseButton.position = CGPoint(x: 220, y: 514)
+        pauseButton.zPosition = 5
+        pauseButton.setScale(1.75)
+        camera.addChild(pauseButton)
     }
     
     func lose() {
@@ -36,17 +62,41 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         showGameOver()
     }
     
-    private func showBlackOverlay(on camera: SKCameraNode,
-                                  width: CGFloat,
-                                  height: CGFloat) -> SKSpriteNode {
+    // black by default (whiteLevel = 0)
+    // you can make white overlay with whiteLevel = 1
+    private func showOverlay(on camera: SKCameraNode,
+                             width: CGFloat,
+                             height: CGFloat,
+                             isWhite: Bool = false,
+                             alpha: CGFloat = 0.4,
+                             overlayNodeName: String = "") -> SKSpriteNode {
         
         let overlay = SKSpriteNode(
-            color: UIColor(white: 0, alpha: 0.4),
+            color: UIColor(white: isWhite ? 1 : 0, alpha: alpha),
             size: CGSize(width: width, height: height))
         overlay.zPosition = 10
+        
+        if overlayNodeName != "" {
+            overlay.name = overlayNodeName
+        }
+            
         camera.addChild(overlay)
         
         return overlay
+    }
+    
+    private func addLabelOn(overlay: SKSpriteNode,
+                            text: String,
+                            fontSize: CGFloat,
+                            position: CGPoint,
+                            fontName: String = "PoiretOne-Regular") {
+        
+        let label = SKLabelNode()
+        label.text = text
+        label.fontSize = fontSize
+        label.fontName = fontName
+        label.position = position
+        overlay.addChild(label)
     }
     
     private func showGameOver() {
@@ -59,36 +109,34 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
             UIScreen.main.nativeScale
         )
         
-        let gameOverScreen = showBlackOverlay(on: camera,
-                                              width: screenWidth,
-                                              height: screenHeight)
+        let gameOverScreen = showOverlay(on: camera,
+                                         width: screenWidth,
+                                         height: screenHeight)
         
-        let title = SKLabelNode()
-        title.text = "GAME OVER"
-        title.fontSize = 48
-        title.fontName = "PoiretOne-Regular"
-        title.position = CGPoint(x: 0, y: 400)
-        gameOverScreen.addChild(title)
+        addLabelOn(overlay: gameOverScreen,
+                   text: "GAME OVER",
+                   fontSize: 48,
+                   position: CGPoint(x: 0, y: 400))
         
         let outOfBatteryLogo = SKSpriteNode(imageNamed: "gameovericon")
         outOfBatteryLogo.position = CGPoint(x: 0, y: 120)
         outOfBatteryLogo.setScale(screenScale)
         gameOverScreen.addChild(outOfBatteryLogo)
         
-        let sentence = SKLabelNode()
-        sentence.text = "Your battery has died!"
-        sentence.fontSize = 36
-        sentence.fontName = "PoiretOne-Regular"
-        sentence.position = CGPoint(x: 0, y: -120)
-        gameOverScreen.addChild(sentence)
+        addLabelOn(overlay: gameOverScreen,
+                   text: "Your battery has died!",
+                   fontSize: 36,
+                   position: CGPoint(x: 0, y: -120))
         
-        let exitButton = Button(name: "exit")
+        let exitButton = SpriteButton(imageName: "exit",
+                                      buttonName: "exit")
         exitButton.delegate = self
         exitButton.position = CGPoint(x: -112, y: -440)
         exitButton.setScale(1.75)
         gameOverScreen.addChild(exitButton)
         
-        let restartButton = Button(name: "restart")
+        let restartButton = SpriteButton(imageName: "restart",
+                                         buttonName: "restart")
         restartButton.delegate = self
         restartButton.position = CGPoint(x: 112, y: -440)
         restartButton.setScale(1.75)
@@ -100,11 +148,76 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     }
     
     func pause() {
+        gameStateHandler.currentState = .paused
         
+        // remove / 'pause' currently ongoing actions
+        gameStateHandler.delegate?.pauseTimer()
+        energyBarHandler.delegate?.pauseUsingBattery()
+        
+        showPauseScreen()
+    }
+    
+    private func showPauseScreen() {
+        guard let camera = cameraHandler.node else { return }
+               
+        let (screenWidth, screenHeight, _) = (
+           UIScreen.main.nativeBounds.width,
+           UIScreen.main.nativeBounds.height,
+           UIScreen.main.nativeScale
+        )
+
+        let pauseScreen = showOverlay(on: camera,
+                                      width: screenWidth,
+                                      height: screenHeight,
+                                      isWhite: true,
+                                      alpha: 0.8,
+                                      overlayNodeName: "pauseScreen")
+        
+        // back button : "chevron.left" here
+        let backButton = SpriteButton(uiImageSystemName: "chevron.left",
+                                      buttonName: "pauseBack",
+                                      tintColor: .black,
+                                      size: CGSize(width: 50, height: 64))
+        backButton.delegate = self
+        backButton.position = CGPoint(x: -220, y: 514)
+        backButton.zPosition = 10
+        pauseScreen.addChild(backButton)
+        
+        let mainMenuButton = LabelButton(
+            text: "M A I N   M E N U",
+            buttonName: "pauseMainMenu",
+            fontSize: 54,
+            fontColor: .black)
+        
+        mainMenuButton.delegate = self
+        mainMenuButton.position = CGPoint(x: 0, y: 64)
+        pauseScreen.addChild(mainMenuButton)
+        
+        let restartButton = LabelButton(
+            text: "R E S T A R T",
+            buttonName: "pauseRestart",
+            fontSize: 54,
+            fontColor: .black)
+        
+        restartButton.delegate = self
+        restartButton.position = CGPoint(x: 0, y: -64)
+        pauseScreen.addChild(restartButton)
     }
     
     func resume() {
+        guard let camera = cameraHandler.node else { return }
         
+        gameStateHandler.currentState = .playing
+        
+        // remove / 'pause' currently ongoing actions
+        gameStateHandler.delegate?.startTimer()
+        
+        let currentDischargeDuration = energyBarHandler.dischargeDuration
+        energyBarHandler.delegate?.useBattery(for: currentDischargeDuration)
+        
+        let pauseScreen = camera.childNode(withName: "pauseScreen")
+        pauseScreen?.removeAllChildren()
+        pauseScreen?.removeFromParent()
     }
     
     func restart() {
@@ -129,8 +242,14 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         switch buttonName {
         case "exit":
             print("Exiting the game...")
-        case "restart":
+        case "restart", "pauseRestart":
             restart()
+        case "pause":
+            pause()
+        case "pauseBack":
+            resume()
+        case "pauseMainMenu":
+            print("Going to main menu")
         default:
             break
         }

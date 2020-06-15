@@ -14,6 +14,10 @@ protocol EnergyBarDelegate: class {
     func discharge(by levels: Int)
     func kill()
     func updateEnergyDisplay()
+    
+    // battery usage and pause (for pause screen)
+    func useBattery(for dischargeDuration: Int)
+    func pauseUsingBattery()
 }
 
 class EnergyBarHandler {

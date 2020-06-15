@@ -30,12 +30,20 @@ extension GameScene: EnergyBarDelegate {
         energySprite.position = CGPoint(x: -width / 2 + 112, y: height / 2 + 72)
         
         // battery discharges over time
+        useBattery(for: dischargeDuration)
+    }
+    
+    func useBattery(for dischargeDuration: Int) {
         run(SKAction.repeatForever(SKAction.sequence([
             SKAction.wait(forDuration: TimeInterval(dischargeDuration)),
             SKAction.run { [weak self] in
                 self?.discharge(by: 1)
             }
-        ])))
+        ])), withKey: "useBattery")
+    }
+    
+    func pauseUsingBattery() {
+        removeAction(forKey: "useBattery")
     }
     
     func recharge(by levels: Int) {

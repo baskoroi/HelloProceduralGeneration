@@ -11,6 +11,7 @@ import SpriteKit
 enum GameState {
     case menu
     case playing
+    case paused
     case won
     case lost
 }
@@ -26,6 +27,10 @@ protocol GameStateDelegate: class {
     // end game states
     func lose()
     func win()
+    
+    // timer control
+    func startTimer()
+    func pauseTimer()
     
     func updateTimerDisplay()
 }
@@ -44,4 +49,6 @@ class GameStateHandler {
     func setup() {
         self.delegate?.setupGameState()
     }
+    
+    var pauseScreen: SKSpriteNode?
 }

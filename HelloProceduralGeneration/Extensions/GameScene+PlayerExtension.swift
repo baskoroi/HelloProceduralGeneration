@@ -96,6 +96,8 @@ extension GameScene: PlayerDelegate {
     }
     
     func movePlayer(to location: CGPoint) {
+        guard gameStateHandler.currentState != .paused else { return }
+        
         guard !energyBarHandler.isDead else {
             playerHandler.sprite?.removeAllActions()
             return
@@ -163,10 +165,6 @@ extension GameScene: PlayerDelegate {
 
         let moveActionGroup = SKAction.group([movePlayerAction, animatePlayerAction])
         player.run(moveActionGroup, withKey: movingActionKey)
-    }
-    
-    func stopAllPlayerActions() {
-        playerHandler.sprite?.removeAllActions()
     }
 
 }
