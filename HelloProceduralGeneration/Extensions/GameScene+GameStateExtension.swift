@@ -299,7 +299,6 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         self.removeAllChildren()
         self.removeAllActions()
         
-        print(self.size)
         let newGame = GameScene(size: self.size)
         newGame.scaleMode = .aspectFill
         view.presentScene(newGame)

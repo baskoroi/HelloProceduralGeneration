@@ -27,6 +27,8 @@ extension GameScene: SKPhysicsContactDelegate {
         } else if contactMask == TileCategory.energyCell | TileCategory.player {
             updateTileForTakenEnergyCell(at: contact)
             energyBarHandler.delegate?.recharge(by: 1)
+        } else if contactMask == TileCategory.rescuePoint | TileCategory.player {
+            print("RESCUED!")
         }
     }
     
@@ -38,7 +40,7 @@ extension GameScene: SKPhysicsContactDelegate {
         
         let energyCell = nodeA == playerSprite ? nodeB : nodeA
         let position = energyCell.position
-        print(position)
+
         if let row = mapHandler.itemsLayer?
             .tileRowIndex(fromPosition: position),
             let col = mapHandler.itemsLayer?
@@ -47,8 +49,6 @@ extension GameScene: SKPhysicsContactDelegate {
                     $0.name == "Energy Cell Taken"
             }) {
             
-            print(row, col)
-            print(groundTile)
             // visually reset energy cell tile to ground tile
             itemsLayer.setTileGroup(groundTile, forColumn: col, row: row)
             // remove energy cell from parent

@@ -79,6 +79,35 @@ extension GameScene: MapDelegate {
                                  enableCollision: true)
         
         // TODO set up scene edge physics here
+        
+        // spawn rescue point
+        spawnRescuePoint()
+    }
+    
+    func spawnRescuePoint() {
+        guard let itemsLayer = mapHandler.itemsLayer else { return }
+        guard let tileSet = mapHandler.tileSet else { return }
+        
+        let rescueTile = tileSet.tileGroups.first { $0.name == "Rescue Sign" }
+        
+        let halfWidth  = CGFloat(itemsLayer.numberOfColumns) / 2.0 * mapHandler.tileSize.width
+        let halfHeight = CGFloat(itemsLayer.numberOfRows) / 2.0 * mapHandler.tileSize.height
+        
+        var column: Int
+        var row: Int
+        let distance: Int = 5
+        repeat {
+            column = Int.random(in: (64-distance)...(64+distance))
+            row    = Int.random(in: (64-distance)...(64+distance))
+        } while mapHandler.tiles[column][row] != TileCategory.ground
+        itemsLayer.setTileGroup(rescueTile, forColumn: column, row: row)
+        mapHandler.tiles[column][row] = TileCategory.rescuePoint
+        assignPhysicsBodyToTile(col: column,
+                                row: row,
+                                halfWidth: halfWidth,
+                                halfHeight: halfHeight,
+                                layer: itemsLayer,
+                                categoryBitMask: TileCategory.rescuePoint)
     }
     
     func setupLandTiles(tileSet: SKTileSet) {
