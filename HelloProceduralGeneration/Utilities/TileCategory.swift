@@ -20,4 +20,5 @@ struct TileCategory {
     static let brokenRobots: TileContent    = 1 << 4
     static let energyCell: TileContent      = 1 << 5
     static let player: TileContent          = 1 << 6
+    static let rescuePoint: TileContent     = 1 << 7
 }

@@ -1,5 +1,5 @@
 //
-//  MainMenuScene.swift
+//  IntroComicScene.swift
 //  HelloProceduralGeneration
 //
 //  Created by Baskoro Indrayana on 06/15/20.
@@ -9,57 +9,27 @@
 import AVFoundation
 import SpriteKit
 
-class MainMenuScene: SKScene, ButtonDelegate {
-        
+class IntroComicScene: SKScene, ButtonDelegate {
     func onButtonTap(name buttonName: String) {
-        switch buttonName {
-        case "mainMenuStartButton":
-            startComic()
-        default:
-            break
-        }
+        startGame()
     }
     
     let startButton = SpriteButton(imageName: "mainMenuStartButton",
-                                   buttonName: "mainMenuStartButton")
+                                   buttonName: "comicStartButton")
     
     override func didMove(to view: SKView) {
-        self.size = UIScreen.main.nativeBounds.size
-        
-        setupStartButton()
         setupBackgroundMusic()
         playBackgroundMusic()
+        
+        setupStartButton()
     }
     
     func setupStartButton() {
         startButton.delegate = self
-        startButton.position = CGPoint(x: 0, y: -200)
-        startButton.zPosition = 5
-        childNode(withName: "mainMenuScreen")?.addChild(startButton)
-    }
-    
-//    private func checkWhetherFirstGame() -> Bool {
-//        let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
-//
-//        if launchedBefore == false {
-//            UserDefaults.standard.set(true, forKey: "launchedBefore")
-//            return false
-//        } else {
-//            return true
-//        }
-//    }
-    
-    func startComic() {
-        guard let view = self.view else { return }
-        
-        let fade = SKTransition.fade(withDuration: 0.25)
-        
-        if let comic = IntroComicScene(fileNamed: "IntroComicScene") {
-            comic.scaleMode = .aspectFill
-            view.presentScene(comic, transition: fade)
-        }
-        
-        view.ignoresSiblingOrder = true
+        startButton.position = CGPoint(x: 0, y: 0)
+        startButton.setScale(2.5)
+        startButton.zPosition = 0
+        scene?.addChild(startButton)
     }
     
     func startGame() {
@@ -75,7 +45,7 @@ class MainMenuScene: SKScene, ButtonDelegate {
     
     func setupBackgroundMusic() {
         let musicNode = SKAudioNode(fileNamed: "intro")
-        musicNode.name = "mainMenuBGM"
+        musicNode.name = "comicBGM"
         musicNode.isPositional = false
         // musicNode's autoplay is true by default
         
@@ -83,7 +53,7 @@ class MainMenuScene: SKScene, ButtonDelegate {
     }
     
     func playBackgroundMusic() {
-        guard let musicNode = childNode(withName: "mainMenuBGM") as? SKAudioNode
+        guard let musicNode = childNode(withName: "comicBGM") as? SKAudioNode
             , let musicAVNode = musicNode.avAudioNode
             , let musicEngine = musicAVNode.engine else { return }
         
@@ -95,7 +65,7 @@ class MainMenuScene: SKScene, ButtonDelegate {
     }
     
     func stopBackgroundMusic() {
-        guard let musicNode = childNode(withName: "mainMenuBGM") as? SKAudioNode
+        guard let musicNode = childNode(withName: "comicBGM") as? SKAudioNode
             , let musicAVNode = musicNode.avAudioNode
             , let musicEngine = musicAVNode.engine else { return }
         
