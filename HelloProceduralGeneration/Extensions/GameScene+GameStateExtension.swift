@@ -225,9 +225,21 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         self.removeAllChildren()
         self.removeAllActions()
         
+        print(self.size)
         let newGame = GameScene(size: self.size)
         newGame.scaleMode = .aspectFill
         view.presentScene(newGame)
+    }
+    
+    func goToMainMenu() {
+        guard let view = self.view else { return }
+    
+        if let mainMenu = MainMenuScene(fileNamed: "MainMenuScene") {
+            mainMenu.scaleMode = .aspectFill
+            view.presentScene(mainMenu)
+        }
+        
+        view.ignoresSiblingOrder = true
     }
     
     func updateTimerDisplay() {
@@ -239,16 +251,14 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     
     func onButtonTap(name buttonName: String) {
         switch buttonName {
-        case "exit":
-            print("Exiting the game...")
         case "restart", "pauseRestart":
             restart()
         case "pause":
             pause()
         case "pauseBack":
             resume()
-        case "pauseMainMenu":
-            print("Going to main menu")
+        case "exit", "pauseMainMenu":
+            goToMainMenu()
         default:
             break
         }

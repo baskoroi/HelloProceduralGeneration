@@ -19,7 +19,6 @@ class SpriteButton: SKSpriteNode {
         let texture = SKTexture(imageNamed: imageName)
         let textureSize = CGSize(width: texture.size().width,
                                  height: texture.size().height)
-        print(textureSize)
         super.init(texture: texture, color: .clear, size: textureSize)
         self.name = buttonName
         self.isUserInteractionEnabled = true
@@ -51,7 +50,6 @@ class SpriteButton: SKSpriteNode {
         let texture = node.texture ?? SKTexture(imageNamed: buttonName)
         let textureSize = CGSize(width: texture.size().width,
                                  height: texture.size().height)
-        print(textureSize)
         super.init(texture: texture, color: .clear, size: textureSize)
         self.name = buttonName
         self.isUserInteractionEnabled = true

@@ -38,10 +38,7 @@ class MainMenuScene: SKScene, ButtonDelegate {
         // if first time playing - show the comic first!
         
         // else if already played second time - directly start a new game
-        guard let skView = self.view else {
-            print("Could not get SKview")
-            return
-        }
+        guard let skView = self.view else { return }
         
         let scene = GameScene(size: UIScreen.main.nativeBounds.size)
         scene.scaleMode = .aspectFill
