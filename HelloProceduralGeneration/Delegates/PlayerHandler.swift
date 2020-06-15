@@ -35,6 +35,8 @@ class PlayerHandler {
     
     var idleAfterMoveAction: SKAction?
     
+    var movingSoundAction: SKAction?
+    
     func setup() {
         self.delegate?.setupPlayer()
     }

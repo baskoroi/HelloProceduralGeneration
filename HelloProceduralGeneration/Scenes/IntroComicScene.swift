@@ -39,7 +39,7 @@ class IntroComicScene: SKScene, ButtonDelegate {
         let scene = GameScene(size: UIScreen.main.nativeBounds.size)
         scene.scaleMode = .aspectFill
         
-        let fadeToBlack = SKTransition.fade(with: .black, duration: 2)
+        let fadeToBlack = SKTransition.fade(withDuration: 0.75)
         skView.presentScene(scene, transition: fadeToBlack)
     }
     

@@ -60,6 +60,7 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     func lose() {
         gameStateHandler.currentState = .lost
         
+        stopBackgroundMusic()
         showGameOver()
     }
     
@@ -154,6 +155,7 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         // remove / 'pause' currently ongoing actions
         gameStateHandler.delegate?.pauseTimer()
         energyBarHandler.delegate?.pauseUsingBattery()
+        stopBackgroundMusic()
         
         showPauseScreen()
     }
@@ -208,6 +210,10 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         
         gameStateHandler.currentState = .playing
         
+        if action(forKey: "playGameBGM") == nil {
+            playBackgroundMusic()
+        }
+        
         // remove / 'pause' currently ongoing actions
         gameStateHandler.delegate?.startTimer()
         
@@ -234,6 +240,8 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     func goToMainMenu() {
         guard let view = self.view else { return }
     
+        stopBackgroundMusic()
+        
         if let mainMenu = MainMenuScene(fileNamed: "MainMenuScene") {
             mainMenu.scaleMode = .aspectFill
             view.presentScene(mainMenu)

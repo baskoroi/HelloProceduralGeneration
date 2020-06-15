@@ -38,6 +38,7 @@ extension GameScene: SKPhysicsContactDelegate {
         
         let energyCell = nodeA == playerSprite ? nodeB : nodeA
         let position = energyCell.position
+        print(position)
         if let row = mapHandler.itemsLayer?
             .tileRowIndex(fromPosition: position),
             let col = mapHandler.itemsLayer?
@@ -45,7 +46,15 @@ extension GameScene: SKPhysicsContactDelegate {
             let groundTile = mapHandler.tileSet?.tileGroups.first(where: {
                     $0.name == "Energy Cell Taken"
             }) {
+            
+            print(row, col)
+            print(groundTile)
+            // visually reset energy cell tile to ground tile
             itemsLayer.setTileGroup(groundTile, forColumn: col, row: row)
+            // remove energy cell from parent
+            energyCell.removeFromParent()
+            // now set to energyCellTaken (value = ground, just different notion)
+            mapHandler.tiles[col][row] = TileCategory.energyCellTaken
         }
     }
     
@@ -219,5 +228,21 @@ extension GameScene: SKPhysicsContactDelegate {
         tileNode.physicsBody?.categoryBitMask = categoryBitMask
         tileNode.physicsBody?.collisionBitMask = collisionBitMask
         tileNode.physicsBody?.contactTestBitMask = contactTestBitMask
+    }
+    
+    func removePhysicsBodyOnTile(layer: SKTileMapNode,
+                                 categoryBitMask: TileContent,
+                                 column: Int,
+                                 row: Int) {
+        
+        layer.childNode(withName: getPhysicsNodeName(
+            categoryBitMask: categoryBitMask, column: column, row: row))?
+            .removeFromParent()
+    }
+    
+    func getPhysicsNodeName(categoryBitMask: TileContent,
+                            column: Int, row: Int) -> String {
+        
+        "tilePhysics=>(type:\(categoryBitMask),col:\(column),row:\(row))"
     }
 }

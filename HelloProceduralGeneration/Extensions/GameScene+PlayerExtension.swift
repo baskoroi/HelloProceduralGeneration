@@ -24,6 +24,10 @@ extension GameScene: PlayerDelegate {
         
         setupPlayerPhysicsBody()
         setupPlayerAnimations()
+        
+        playerHandler.movingSoundAction = SKAction.repeatForever(
+            SKAction.playSoundFileNamed("rolling.mp3",
+                                        waitForCompletion: false))
     }
 
     func setupPlayerPhysicsBody() {
@@ -162,8 +166,9 @@ extension GameScene: PlayerDelegate {
             movePlayerAction = SKAction.repeatForever(
                 SKAction.moveBy(x: 0, y: -speed, duration: 1))
         }
-
-        let moveActionGroup = SKAction.group([movePlayerAction, animatePlayerAction])
+        
+        let moveActionGroup = SKAction.group([movePlayerAction,
+                                              animatePlayerAction])
         player.run(moveActionGroup, withKey: movingActionKey)
     }
 

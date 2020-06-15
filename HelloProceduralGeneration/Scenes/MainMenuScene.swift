@@ -38,21 +38,10 @@ class MainMenuScene: SKScene, ButtonDelegate {
         childNode(withName: "mainMenuScreen")?.addChild(startButton)
     }
     
-//    private func checkWhetherFirstGame() -> Bool {
-//        let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
-//
-//        if launchedBefore == false {
-//            UserDefaults.standard.set(true, forKey: "launchedBefore")
-//            return false
-//        } else {
-//            return true
-//        }
-//    }
-    
     func startComic() {
         guard let view = self.view else { return }
         
-        let fade = SKTransition.fade(withDuration: 0.25)
+        let fade = SKTransition.fade(withDuration: 0.75)
         
         if let comic = IntroComicScene(fileNamed: "IntroComicScene") {
             comic.scaleMode = .aspectFill

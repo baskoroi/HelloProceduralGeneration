@@ -9,6 +9,13 @@
 import SpriteKit
 
 extension GameScene {
+    func setupAllSounds() {
+        setupBackgroundMusic()
+        playBackgroundMusic()
+    }
+    
+    // MARK: - background music
+    
     func setupBackgroundMusic() {
         let musicNode = SKAudioNode(fileNamed: "BGM1(low)")
         musicNode.name = "gameBGM"
@@ -26,7 +33,7 @@ extension GameScene {
         do {
             try musicEngine.start()
         } catch {
-            fatalError("Background music failed to load")
+            fatalError("Background music in game failed to load")
         }
     }
     

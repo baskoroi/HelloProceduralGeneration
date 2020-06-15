@@ -25,6 +25,9 @@
 		CCADC71324975B9E009611AB /* BGM2(low).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CCADC70F24975B9E009611AB /* BGM2(low).mp3 */; };
 		CCADC7152497640E009611AB /* IntroComicScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCADC7142497640E009611AB /* IntroComicScene.swift */; };
 		CCADC71924977305009611AB /* GameScene+AudioExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCADC71824977305009611AB /* GameScene+AudioExtension.swift */; };
+		CCADC71D249774D3009611AB /* rolling.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CCADC71A249774D3009611AB /* rolling.mp3 */; };
+		CCADC71E249774D3009611AB /* impact.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CCADC71B249774D3009611AB /* impact.mp3 */; };
+		CCADC71F249774D3009611AB /* robosound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CCADC71C249774D3009611AB /* robosound.mp3 */; };
 		CCBA8BB32493705800BC400D /* TileCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCBA8BB22493705800BC400D /* TileCategory.swift */; };
 		CCBA8BB62493717500BC400D /* MapHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCBA8BB52493717500BC400D /* MapHandler.swift */; };
 		CCBA8BB82493737900BC400D /* GameScene+MapExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCBA8BB72493737900BC400D /* GameScene+MapExtension.swift */; };
@@ -62,6 +65,9 @@
 		CCADC70F24975B9E009611AB /* BGM2(low).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "BGM2(low).mp3"; sourceTree = "<group>"; };
 		CCADC7142497640E009611AB /* IntroComicScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroComicScene.swift; sourceTree = "<group>"; };
 		CCADC71824977305009611AB /* GameScene+AudioExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+AudioExtension.swift"; sourceTree = "<group>"; };
+		CCADC71A249774D3009611AB /* rolling.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = rolling.mp3; sourceTree = "<group>"; };
+		CCADC71B249774D3009611AB /* impact.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = impact.mp3; sourceTree = "<group>"; };
+		CCADC71C249774D3009611AB /* robosound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = robosound.mp3; sourceTree = "<group>"; };
 		CCBA8BB22493705800BC400D /* TileCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileCategory.swift; sourceTree = "<group>"; };
 		CCBA8BB52493717500BC400D /* MapHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapHandler.swift; sourceTree = "<group>"; };
 		CCBA8BB72493737900BC400D /* GameScene+MapExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+MapExtension.swift"; sourceTree = "<group>"; };
@@ -146,6 +152,9 @@
 		CCADC70B24975B8A009611AB /* Effects */ = {
 			isa = PBXGroup;
 			children = (
+				CCADC71B249774D3009611AB /* impact.mp3 */,
+				CCADC71C249774D3009611AB /* robosound.mp3 */,
+				CCADC71A249774D3009611AB /* rolling.mp3 */,
 			);
 			path = Effects;
 			sourceTree = "<group>";
@@ -282,10 +291,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCADC71024975B9E009611AB /* BGM1(low).mp3 in Resources */,
+				CCADC71D249774D3009611AB /* rolling.mp3 in Resources */,
 				CCEFD1F8249119AF0064CC60 /* MainTileSet.sks in Resources */,
 				CCADC71324975B9E009611AB /* BGM2(low).mp3 in Resources */,
 				CC4275702497335400C8C566 /* MainMenuScene.sks in Resources */,
 				CC427569249617CE00C8C566 /* PoiretOne-Regular.ttf in Resources */,
+				CCADC71E249774D3009611AB /* impact.mp3 in Resources */,
+				CCADC71F249774D3009611AB /* robosound.mp3 in Resources */,
 				CCEFD1EB249110EB0064CC60 /* Main.storyboard in Resources */,
 				CCADC71224975B9E009611AB /* BGM3(low).mp3 in Resources */,
 				CCEFD1E2249110EB0064CC60 /* GameScene.sks in Resources */,
