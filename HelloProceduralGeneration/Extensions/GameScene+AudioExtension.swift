@@ -37,11 +37,11 @@ extension GameScene {
         }
     }
     
-    func stopBackgroundMusic() {
+    func pauseBackgroundMusic() {
         guard let musicNode = childNode(withName: "gameBGM") as? SKAudioNode
             , let musicAVNode = musicNode.avAudioNode
             , let musicEngine = musicAVNode.engine else { return }
         
-        musicEngine.stop()
+        musicEngine.pause()
     }
 }

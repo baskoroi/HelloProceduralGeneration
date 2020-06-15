@@ -17,7 +17,75 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         setupGameTimerDisplay()
         setupPauseButton()
         
-        startTimer()
+        showTutorialOnTiles()
+    }
+    
+    func showTutorialOnTiles() {
+        guard let camera = cameraHandler.node else { return }
+               
+        let (screenWidth, screenHeight, screenScale) =
+            (UIScreen.main.nativeBounds.width,
+             UIScreen.main.nativeBounds.height,
+             UIScreen.main.nativeScale)
+
+        let tilesTutorial = showOverlay(on: camera,
+                                        width: screenWidth,
+                                        height: screenHeight,
+                                        isWhite: false,
+                                        alpha: 0,
+                                        overlayNodeName: "tilesTutorial")
+        
+        let guideScreen = SKSpriteNode(imageNamed: "tilesTutorialScreen")
+        guideScreen.size = CGSize(width: screenWidth, height: screenHeight)
+        guideScreen.isUserInteractionEnabled = true
+        tilesTutorial.addChild(guideScreen)
+        
+        let doneButton = SpriteButton(imageName: "doneButton",
+                                      buttonName: "tilesTutorialDoneButton")
+        doneButton.delegate = self
+        doneButton.position = CGPoint(x: 0, y: -600)
+        doneButton.zPosition = 10
+        doneButton.setScale(screenScale)
+        tilesTutorial.addChild(doneButton)
+    }
+    
+    func closeTilesTutorial() {
+        guard let camera = cameraHandler.node else { return }
+        camera.childNode(withName: "tilesTutorial")?.removeFromParent()
+    }
+    
+    func showTutorialOnRescuePoint() {
+        guard let camera = cameraHandler.node else { return }
+               
+        let (screenWidth, screenHeight, screenScale) =
+            (UIScreen.main.nativeBounds.width,
+             UIScreen.main.nativeBounds.height,
+             UIScreen.main.nativeScale)
+
+        let rescuePointTutorial = showOverlay(on: camera,
+                                        width: screenWidth,
+                                        height: screenHeight,
+                                        isWhite: false,
+                                        alpha: 0,
+                                        overlayNodeName: "rescuePointTutorial")
+        
+        let guideScreen = SKSpriteNode(imageNamed: "rescuePointTutorialScreen")
+        guideScreen.size = CGSize(width: screenWidth, height: screenHeight)
+        guideScreen.isUserInteractionEnabled = true
+        rescuePointTutorial.addChild(guideScreen)
+        
+        let doneButton = SpriteButton(imageName: "doneButton",
+                                      buttonName: "rescuePointTutorialDoneButton")
+        doneButton.delegate = self
+        doneButton.position = CGPoint(x: 0, y: -600)
+        doneButton.zPosition = 10
+        doneButton.setScale(screenScale)
+        rescuePointTutorial.addChild(doneButton)
+    }
+    
+    func closeRescuePointTutorial() {
+        guard let camera = cameraHandler.node else { return }
+        camera.childNode(withName: "rescuePointTutorial")?.removeFromParent()
     }
     
     func startTimer() {
@@ -60,7 +128,7 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     func lose() {
         gameStateHandler.currentState = .lost
         
-        stopBackgroundMusic()
+        pauseBackgroundMusic()
         showGameOver()
     }
     
@@ -155,7 +223,7 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         // remove / 'pause' currently ongoing actions
         gameStateHandler.delegate?.pauseTimer()
         energyBarHandler.delegate?.pauseUsingBattery()
-        stopBackgroundMusic()
+        pauseBackgroundMusic()
         
         showPauseScreen()
     }
@@ -240,7 +308,7 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     func goToMainMenu() {
         guard let view = self.view else { return }
     
-        stopBackgroundMusic()
+        pauseBackgroundMusic()
         
         if let mainMenu = MainMenuScene(fileNamed: "MainMenuScene") {
             mainMenu.scaleMode = .aspectFill
@@ -265,8 +333,17 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
             pause()
         case "pauseBack":
             resume()
+            playBackgroundMusic()
         case "exit", "pauseMainMenu":
             goToMainMenu()
+        case "tilesTutorialDoneButton":
+            closeTilesTutorial()
+            showTutorialOnRescuePoint()
+        case "rescuePointTutorialDoneButton":
+            closeRescuePointTutorial()
+            gameStateHandler.delegate?.startTimer()
+            energyBarHandler.delegate?.useBattery(
+                for: energyBarHandler.dischargeDuration)
         default:
             break
         }

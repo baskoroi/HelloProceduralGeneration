@@ -27,8 +27,8 @@ extension GameScene: EnergyBarDelegate {
         energySprite.setScale(2.5)
         energySprite.position = CGPoint(x: -width / 2 + 100, y: height / 2 + 240)
         
-        // battery discharges over time
-        useBattery(for: dischargeDuration)
+//        // battery discharges over time
+//        useBattery(for: dischargeDuration)
     }
     
     func useBattery(for dischargeDuration: Int) {

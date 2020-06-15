@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "energycollect_1.png",
+      "filename" : "tutorialCollectEnergy.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "energycollect_1@2x.png",
+      "filename" : "tutorialCollectEnergy@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "energycollect_1@3x.png",
+      "filename" : "tutorialCollectEnergy@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
