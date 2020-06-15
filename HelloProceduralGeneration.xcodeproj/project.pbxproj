@@ -24,6 +24,7 @@
 		CCADC71224975B9E009611AB /* BGM3(low).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CCADC70E24975B9E009611AB /* BGM3(low).mp3 */; };
 		CCADC71324975B9E009611AB /* BGM2(low).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CCADC70F24975B9E009611AB /* BGM2(low).mp3 */; };
 		CCADC7152497640E009611AB /* IntroComicScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCADC7142497640E009611AB /* IntroComicScene.swift */; };
+		CCADC71924977305009611AB /* GameScene+AudioExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCADC71824977305009611AB /* GameScene+AudioExtension.swift */; };
 		CCBA8BB32493705800BC400D /* TileCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCBA8BB22493705800BC400D /* TileCategory.swift */; };
 		CCBA8BB62493717500BC400D /* MapHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCBA8BB52493717500BC400D /* MapHandler.swift */; };
 		CCBA8BB82493737900BC400D /* GameScene+MapExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCBA8BB72493737900BC400D /* GameScene+MapExtension.swift */; };
@@ -60,6 +61,7 @@
 		CCADC70E24975B9E009611AB /* BGM3(low).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "BGM3(low).mp3"; sourceTree = "<group>"; };
 		CCADC70F24975B9E009611AB /* BGM2(low).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "BGM2(low).mp3"; sourceTree = "<group>"; };
 		CCADC7142497640E009611AB /* IntroComicScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroComicScene.swift; sourceTree = "<group>"; };
+		CCADC71824977305009611AB /* GameScene+AudioExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+AudioExtension.swift"; sourceTree = "<group>"; };
 		CCBA8BB22493705800BC400D /* TileCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileCategory.swift; sourceTree = "<group>"; };
 		CCBA8BB52493717500BC400D /* MapHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapHandler.swift; sourceTree = "<group>"; };
 		CCBA8BB72493737900BC400D /* GameScene+MapExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+MapExtension.swift"; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				CC68B5F72493C089009F9099 /* GameScene+PhysicsContactExtension.swift */,
 				CCFA06552494D42600C59BFB /* GameScene+EnergyBarExtension.swift */,
 				CC1B17DF249518B100A8D429 /* GameScene+GameStateExtension.swift */,
+				CCADC71824977305009611AB /* GameScene+AudioExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				CCBA8BB32493705800BC400D /* TileCategory.swift in Sources */,
 				CC8C7B2324927F3700F55A85 /* PlayerAnimations.swift in Sources */,
 				CC1B17E0249518B100A8D429 /* GameScene+GameStateExtension.swift in Sources */,
+				CCADC71924977305009611AB /* GameScene+AudioExtension.swift in Sources */,
 				CCBA8BBD2493A01800BC400D /* GameScene+CameraExtension.swift in Sources */,
 				CC68B5F82493C089009F9099 /* GameScene+PhysicsContactExtension.swift in Sources */,
 				CCBA8BB62493717500BC400D /* MapHandler.swift in Sources */,

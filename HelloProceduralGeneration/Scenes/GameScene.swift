@@ -44,6 +44,9 @@ class GameScene: SKScene {
         
         gameStateHandler.delegate = self
         gameStateHandler.setup()
+        
+        setupBackgroundMusic()
+        playBackgroundMusic()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
