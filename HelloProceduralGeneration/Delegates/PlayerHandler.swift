@@ -14,6 +14,7 @@ protocol PlayerDelegate: class {
     func setupPlayerAnimations()
     func movePlayer(to location: CGPoint)
     func standPlayerStill()
+    func rescuePlayer()
 }
 
 class PlayerHandler {

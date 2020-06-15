@@ -53,36 +53,36 @@ extension GameScene: PlayerDelegate {
         // only standing
         playerHandler.standingUp = SKAction.run {
             self.playerHandler.sprite?.texture =
-                PlayerAnimations.Textures.Standing.up
+                GameAnimations.Player.Standing.up
         }
         playerHandler.standingDown = SKAction.run {
             self.playerHandler.sprite?.texture =
-                PlayerAnimations.Textures.Standing.down
+                GameAnimations.Player.Standing.down
         }
         playerHandler.standingLeft = SKAction.run {
             self.playerHandler.sprite?.texture =
-                PlayerAnimations.Textures.Standing.left
+                GameAnimations.Player.Standing.left
         }
         playerHandler.standingRight = SKAction.run {
             self.playerHandler.sprite?.texture =
-                PlayerAnimations.Textures.Standing.right
+                GameAnimations.Player.Standing.right
         }
         
         // only running
         playerHandler.runningUp = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.Textures.Running.up,
+            SKAction.animate(with: GameAnimations.Player.Running.up,
                              timePerFrame: 0.1)
         )
         playerHandler.runningLeft = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.Textures.Running.left,
+            SKAction.animate(with: GameAnimations.Player.Running.left,
                              timePerFrame: 0.1)
         )
         playerHandler.runningRight = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.Textures.Running.right,
+            SKAction.animate(with: GameAnimations.Player.Running.right,
                              timePerFrame: 0.1)
         )
         playerHandler.runningDown = SKAction.repeatForever(
-            SKAction.animate(with: PlayerAnimations.Textures.Running.down,
+            SKAction.animate(with: GameAnimations.Player.Running.down,
                              timePerFrame: 0.1)
         )
         
@@ -95,12 +95,13 @@ extension GameScene: PlayerDelegate {
     func standPlayerStill() {
         guard let player = playerHandler.sprite
             , let idleAfterMoveAction = playerHandler.idleAfterMoveAction else { return }
-        player.removeAction(forKey: PlayerAnimations.ActionKeys.moving.rawValue)
-        player.run(idleAfterMoveAction, withKey: PlayerAnimations.ActionKeys.standing.rawValue)
+        player.removeAction(forKey: GameAnimations.ActionKeys.moving.rawValue)
+        player.run(idleAfterMoveAction, withKey: GameAnimations.ActionKeys.standing.rawValue)
     }
     
     func movePlayer(to location: CGPoint) {
-        guard gameStateHandler.currentState != .paused else { return }
+        guard gameStateHandler.currentState != .paused &&
+            gameStateHandler.currentState != .won else { return }
         
         guard !energyBarHandler.isDead else {
             playerHandler.sprite?.removeAllActions()
@@ -118,7 +119,7 @@ extension GameScene: PlayerDelegate {
             , let standingRight = playerHandler.standingRight
             , playerHandler.idleAfterMoveAction != nil else { return }
         
-        let movingActionKey = PlayerAnimations.ActionKeys.moving.rawValue
+        let movingActionKey = GameAnimations.ActionKeys.moving.rawValue
         
         // remove previously moveToAction that's still existing, if any
         player.removeAllActions()
@@ -172,4 +173,48 @@ extension GameScene: PlayerDelegate {
         player.run(moveActionGroup, withKey: movingActionKey)
     }
 
+    func rescuePlayer() {
+        guard gameStateHandler.currentState == .won else { return }
+        
+        guard let camera = cameraHandler.node
+            , let player = playerHandler.sprite else { return }
+        
+        let (width, height) = (UIScreen.main.nativeBounds.width,
+                               UIScreen.main.nativeBounds.height)
+        
+        let rescueShipAtlas = SKTextureAtlas(named: "Rescue Ship")
+        var frames = [SKTexture]()
+        
+        let numImages = rescueShipAtlas.textureNames.count
+        for i in 1...numImages {
+            let textureName = "ship\(i)"
+            frames.append(rescueShipAtlas.textureNamed(textureName))
+        }
+        
+        let firstFrameTexture = frames[0]
+        let rescueShip = SKSpriteNode(texture: firstFrameTexture)
+        rescueShip.size = CGSize(width: width, height: height)
+        rescueShip.position = CGPoint(x: 0, y: 0)
+        camera.addChild(rescueShip)
+        
+        let rescueShipAnimation = {
+            rescueShip.run(SKAction.animate(with: frames, timePerFrame: 0.1, resize: false, restore: false))
+        }
+        
+        let playerFadeAtLightAnimation = SKAction.sequence([
+            SKAction.wait(forDuration: 2),
+            SKAction.run {
+                player.run(SKAction.fadeOut(withDuration: 1))
+            }
+        ])
+        
+        // run entire animation
+        run(SKAction.group([
+            SKAction.run(rescueShipAnimation),
+            playerFadeAtLightAnimation
+        ]))
+    }
+    
+    
+    
 }

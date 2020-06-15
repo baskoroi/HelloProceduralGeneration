@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CCEFD1DB249110EB0064CC60"
-               BuildableName = "HelloProceduralGeneration.app"
+               BuildableName = "Proxima C.app"
                BlueprintName = "HelloProceduralGeneration"
                ReferencedContainer = "container:HelloProceduralGeneration.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CCEFD1DB249110EB0064CC60"
-            BuildableName = "HelloProceduralGeneration.app"
+            BuildableName = "Proxima C.app"
             BlueprintName = "HelloProceduralGeneration"
             ReferencedContainer = "container:HelloProceduralGeneration.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CCEFD1DB249110EB0064CC60"
-            BuildableName = "HelloProceduralGeneration.app"
+            BuildableName = "Proxima C.app"
             BlueprintName = "HelloProceduralGeneration"
             ReferencedContainer = "container:HelloProceduralGeneration.xcodeproj">
          </BuildableReference>

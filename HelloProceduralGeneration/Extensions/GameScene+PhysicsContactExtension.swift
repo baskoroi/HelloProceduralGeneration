@@ -28,7 +28,7 @@ extension GameScene: SKPhysicsContactDelegate {
             updateTileForTakenEnergyCell(at: contact)
             energyBarHandler.delegate?.recharge(by: 1)
         } else if contactMask == TileCategory.rescuePoint | TileCategory.player {
-            print("RESCUED!")
+            gameStateHandler.delegate?.win()
         }
     }
     

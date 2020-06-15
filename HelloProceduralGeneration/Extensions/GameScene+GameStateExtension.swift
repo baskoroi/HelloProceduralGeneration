@@ -215,6 +215,17 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     
     func win() {
         gameStateHandler.currentState = .won
+        
+        // pause ongoing actions beforehand
+        gameStateHandler.delegate?.pauseTimer()
+        energyBarHandler.delegate?.pauseUsingBattery()
+        
+        // remove energy bar, timer, and pause button from UI
+        energyBarHandler.sprite?.removeFromParent()
+        gameStateHandler.timerLabel?.removeFromParent()
+        cameraHandler.node?.childNode(withName: "pause")?.removeFromParent()
+        
+        playerHandler.delegate?.rescuePlayer()
     }
     
     func pause() {
