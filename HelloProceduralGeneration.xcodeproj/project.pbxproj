@@ -11,6 +11,8 @@
 		CC1B17E0249518B100A8D429 /* GameScene+GameStateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1B17DF249518B100A8D429 /* GameScene+GameStateExtension.swift */; };
 		CC427569249617CE00C8C566 /* PoiretOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC427568249617CE00C8C566 /* PoiretOne-Regular.ttf */; };
 		CC42756B24961E3400C8C566 /* ButtonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC42756A24961E3400C8C566 /* ButtonDelegate.swift */; };
+		CC4275702497335400C8C566 /* MainMenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = CC42756F2497335400C8C566 /* MainMenuScene.sks */; };
+		CC427572249734CA00C8C566 /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC427571249734CA00C8C566 /* MainMenuScene.swift */; };
 		CC68B5F22493ABFA009F9099 /* PerlinNoise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC68B5F12493ABFA009F9099 /* PerlinNoise.swift */; };
 		CC68B5F42493AFEB009F9099 /* PlayerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC68B5F32493AFEB009F9099 /* PlayerHandler.swift */; };
 		CC68B5F62493B08E009F9099 /* GameScene+PlayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC68B5F52493B08E009F9099 /* GameScene+PlayerExtension.swift */; };
@@ -39,6 +41,8 @@
 		CC1B17DF249518B100A8D429 /* GameScene+GameStateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+GameStateExtension.swift"; sourceTree = "<group>"; };
 		CC427568249617CE00C8C566 /* PoiretOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PoiretOne-Regular.ttf"; sourceTree = "<group>"; };
 		CC42756A24961E3400C8C566 /* ButtonDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDelegate.swift; sourceTree = "<group>"; };
+		CC42756F2497335400C8C566 /* MainMenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenuScene.sks; sourceTree = "<group>"; };
+		CC427571249734CA00C8C566 /* MainMenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
 		CC68B5F12493ABFA009F9099 /* PerlinNoise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerlinNoise.swift; sourceTree = "<group>"; };
 		CC68B5F32493AFEB009F9099 /* PlayerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerHandler.swift; sourceTree = "<group>"; };
 		CC68B5F52493B08E009F9099 /* GameScene+PlayerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+PlayerExtension.swift"; sourceTree = "<group>"; };
@@ -81,6 +85,17 @@
 				CC427568249617CE00C8C566 /* PoiretOne-Regular.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		CC42756E249732EC00C8C566 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				CCEFD1E1249110EB0064CC60 /* GameScene.sks */,
+				CCEFD1E5249110EB0064CC60 /* GameScene.swift */,
+				CC42756F2497335400C8C566 /* MainMenuScene.sks */,
+				CC427571249734CA00C8C566 /* MainMenuScene.swift */,
+			);
+			path = Scenes;
 			sourceTree = "<group>";
 		};
 		CC68B5F02493ABB1009F9099 /* Algorithms */ = {
@@ -151,9 +166,8 @@
 				CCBA8BB924939F0C00BC400D /* Extensions */,
 				CC4275672496179600C8C566 /* Fonts */,
 				CCCA42FC2491CEEC004232DC /* Utilities */,
+				CC42756E249732EC00C8C566 /* Scenes */,
 				CCEFD1DF249110EB0064CC60 /* AppDelegate.swift */,
-				CCEFD1E1249110EB0064CC60 /* GameScene.sks */,
-				CCEFD1E5249110EB0064CC60 /* GameScene.swift */,
 				CCEFD1E7249110EB0064CC60 /* GameViewController.swift */,
 				CCEFD1E9249110EB0064CC60 /* Main.storyboard */,
 				CCEFD1EE249110EC0064CC60 /* LaunchScreen.storyboard */,
@@ -223,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCEFD1F8249119AF0064CC60 /* MainTileSet.sks in Resources */,
+				CC4275702497335400C8C566 /* MainMenuScene.sks in Resources */,
 				CC427569249617CE00C8C566 /* PoiretOne-Regular.ttf in Resources */,
 				CCEFD1EB249110EB0064CC60 /* Main.storyboard in Resources */,
 				CCEFD1E2249110EB0064CC60 /* GameScene.sks in Resources */,
@@ -248,6 +263,7 @@
 				CCBA8BB62493717500BC400D /* MapHandler.swift in Sources */,
 				CC68B5F22493ABFA009F9099 /* PerlinNoise.swift in Sources */,
 				CCCA42FE2491CEFB004232DC /* PoissonDiscSampling.swift in Sources */,
+				CC427572249734CA00C8C566 /* MainMenuScene.swift in Sources */,
 				CCFA06542494BDA800C59BFB /* EnergyBarHandler.swift in Sources */,
 				CC1B17DE249517DE00A8D429 /* GameStateHandler.swift in Sources */,
 				CCBA8BB82493737900BC400D /* GameScene+MapExtension.swift in Sources */,

@@ -48,11 +48,12 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     func setupPauseButton() {
         guard let camera = cameraHandler.node else { return }
         
+        let (width, height) = (ScreenHelper.width, ScreenHelper.height)
         let pauseButton = SpriteButton(imageName: "pause", buttonName: "pause")
         pauseButton.delegate = self
-        pauseButton.position = CGPoint(x: 220, y: 514)
+        pauseButton.position = CGPoint(x: width / 2 + 100, y: height / 2 + 240)
         pauseButton.zPosition = 5
-        pauseButton.setScale(1.75)
+        pauseButton.setScale(2.5)
         camera.addChild(pauseButton)
     }
     
@@ -160,11 +161,8 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     private func showPauseScreen() {
         guard let camera = cameraHandler.node else { return }
                
-        let (screenWidth, screenHeight, _) = (
-           UIScreen.main.nativeBounds.width,
-           UIScreen.main.nativeBounds.height,
-           UIScreen.main.nativeScale
-        )
+        let (screenWidth, screenHeight) = (UIScreen.main.nativeBounds.width,
+                                           UIScreen.main.nativeBounds.height)
 
         let pauseScreen = showOverlay(on: camera,
                                       width: screenWidth,
@@ -177,16 +175,17 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         let backButton = SpriteButton(uiImageSystemName: "chevron.left",
                                       buttonName: "pauseBack",
                                       tintColor: .white,
-                                      size: CGSize(width: 50, height: 64))
+                                      size: CGSize(width: 48, height: 60))
         backButton.delegate = self
-        backButton.position = CGPoint(x: -220, y: 514)
+        backButton.position = CGPoint(x: -screenWidth / 2 + 100,
+                                      y: screenHeight / 2 - 200)
         backButton.zPosition = 10
         pauseScreen.addChild(backButton)
         
         let mainMenuButton = LabelButton(
             text: "M A I N   M E N U",
             buttonName: "pauseMainMenu",
-            fontSize: 40,
+            fontSize: 54,
             fontColor: .white)
         
         mainMenuButton.delegate = self
@@ -196,7 +195,7 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         let restartButton = LabelButton(
             text: "R E S T A R T",
             buttonName: "pauseRestart",
-            fontSize: 40,
+            fontSize: 54,
             fontColor: .white)
         
         restartButton.delegate = self

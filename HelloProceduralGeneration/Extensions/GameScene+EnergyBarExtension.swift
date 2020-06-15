@@ -24,8 +24,8 @@ extension GameScene: EnergyBarDelegate {
         let dischargeDuration = energyBarHandler.dischargeDuration
         cameraNode.addChild(energySprite)
         energySprite.zPosition = 5
-        energySprite.setScale(1.75)
-        energySprite.position = CGPoint(x: -width / 2 + 112, y: height / 2 + 72)
+        energySprite.setScale(2.5)
+        energySprite.position = CGPoint(x: -width / 2 + 100, y: height / 2 + 240)
         
         // battery discharges over time
         useBattery(for: dischargeDuration)
