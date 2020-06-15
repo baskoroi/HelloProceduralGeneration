@@ -209,12 +209,50 @@ extension GameScene: PlayerDelegate {
         ])
         
         // run entire animation
-        run(SKAction.group([
-            SKAction.run(rescueShipAnimation),
-            playerFadeAtLightAnimation
-        ]))
+        run(
+            SKAction.sequence([
+                SKAction.group([
+                    SKAction.wait(forDuration: 5),
+                    SKAction.run(rescueShipAnimation),
+                    playerFadeAtLightAnimation,
+                ]),
+                SKAction.run { [weak self] in
+                    rescueShip.removeFromParent()
+                    player.removeFromParent()
+                    self?.showRescuedScreen()
+                }
+            ])
+        )
+            
     }
     
-    
+    func showRescuedScreen() {
+        guard let camera = cameraHandler.node else { return }
+               
+        let (screenWidth, screenHeight, screenScale) =
+            (UIScreen.main.nativeBounds.width,
+             UIScreen.main.nativeBounds.height,
+             UIScreen.main.nativeScale)
+
+        let rescuedScreen = showOverlay(on: camera,
+                                        width: screenWidth,
+                                        height: screenHeight,
+                                        isWhite: false,
+                                        alpha: 0,
+                                        overlayNodeName: "rescuedOverlay")
+        
+        let sprite = SKSpriteNode(imageNamed: "gameWonScreen")
+        sprite.size = CGSize(width: screenWidth, height: screenHeight)
+        sprite.isUserInteractionEnabled = true
+        rescuedScreen.addChild(sprite)
+        
+        let doneButton = SpriteButton(imageName: "doneButton",
+                                      buttonName: "rescuedScreenDoneButton")
+        doneButton.delegate = self
+        doneButton.position = CGPoint(x: 0, y: -600)
+        doneButton.zPosition = 10
+        doneButton.setScale(screenScale)
+        rescuedScreen.addChild(doneButton)
+    }
     
 }

@@ -134,7 +134,7 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
     
     // black by default (whiteLevel = 0)
     // you can make white overlay with whiteLevel = 1
-    private func showOverlay(on camera: SKCameraNode,
+    func showOverlay(on camera: SKCameraNode,
                              width: CGFloat,
                              height: CGFloat,
                              isWhite: Bool = false,
@@ -144,6 +144,24 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         let overlay = SKSpriteNode(
             color: UIColor(white: isWhite ? 1 : 0, alpha: alpha),
             size: CGSize(width: width, height: height))
+        overlay.zPosition = 10
+        
+        if overlayNodeName != "" {
+            overlay.name = overlayNodeName
+        }
+            
+        camera.addChild(overlay)
+        
+        return overlay
+    }
+    
+    func showImageOverlay(on camera: SKCameraNode,
+                          width: CGFloat,
+                          height: CGFloat,
+                          imageName: String,
+                          overlayNodeName: String = "") -> SKSpriteNode {
+        
+        let overlay = SKSpriteNode(imageNamed: imageName)
         overlay.zPosition = 10
         
         if overlayNodeName != "" {
@@ -344,7 +362,7 @@ extension GameScene: GameStateDelegate, ButtonDelegate {
         case "pauseBack":
             resume()
             playBackgroundMusic()
-        case "exit", "pauseMainMenu":
+        case "exit", "pauseMainMenu", "rescuedScreenDoneButton":
             goToMainMenu()
         case "tilesTutorialDoneButton":
             closeTilesTutorial()
