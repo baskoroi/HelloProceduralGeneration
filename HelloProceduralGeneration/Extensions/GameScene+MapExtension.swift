@@ -95,10 +95,11 @@ extension GameScene: MapDelegate {
         
         var column: Int
         var row: Int
-        let distance: Int = 5
         repeat {
-            column = Int.random(in: (64-distance)...(64+distance))
-            row    = Int.random(in: (64-distance)...(64+distance))
+            let sign = Bool.random() ? 1 : -1
+            let distance: Int = sign * Int.random(in: 25...30)
+            column = 64 + distance
+            row    = 64 + distance
         } while mapHandler.tiles[column][row] != TileCategory.ground
         itemsLayer.setTileGroup(rescueTile, forColumn: column, row: row)
         mapHandler.tiles[column][row] = TileCategory.rescuePoint
