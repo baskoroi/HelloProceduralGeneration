@@ -8,6 +8,8 @@
 
 import GameplayKit
 
+// credits & reference:
+// https://www.hackingwithswift.com/example-code/games/how-to-create-a-random-terrain-tile-map-using-sktilemapnode-and-gkperlinnoisesource
 class PerlinNoise {
     static func generateNoiseMap(columns: Int, rows: Int) -> GKNoiseMap {
        let source = GKPerlinNoiseSource()
